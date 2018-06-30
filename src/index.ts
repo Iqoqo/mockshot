@@ -3,13 +3,14 @@ import * as path from "path";
 import Project from "ts-simple-ast";
 import fs from "fs";
 import { SnapshotState } from "jest-snapshot";
+import pretty from 'json-pretty'
 
 export async function generateMocks() {
   const project = new Project({
     compilerOptions: { outDir: "dist/mocks", declaration: true }
   });
 
-  glob("**/*.ts.mockshot", async function(er, files) {
+  glob("**/*.snap", async function(er, files) {
     // files is an array of filenames.
     // If the `nonull` option is set, and nothing
     // was found, then files is ["**/*.js"]
@@ -92,11 +93,13 @@ export async function generateMocks() {
         method.setBodyText(writer =>
           writer.write("switch (mock)").block(() => {
             mockNames.forEach(mockName => {
-              writer.writeLine(`case "${mockName}":`);
-              writer.writeLine(`return ${JSON.stringify(mocks[mockName])}`);
+              writer.write(`case "${mockName}":`).indentBlock(()=>{
+                writer.write(`return ${pretty(mocks[mockName])}`);
+              })
             });
-            writer.writeLine(`default:`);
-            writer.writeLine(`throw Error("Unknown mock: "+mock);`);
+            writer.write(`default:`).indentBlock(()=>{
+              writer.write(`throw Error("Unknown mock: "+mock);`);
+            })
           })
         );
       });

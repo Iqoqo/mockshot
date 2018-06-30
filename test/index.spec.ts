@@ -20,7 +20,7 @@ describe("toMatchMock", () => {
 
   it("Should return correct schema", () => {
     const hello = new HelloWorld();
-    expect({ foo: "bar" }).toMatchMock(HelloWorld.name, "foo", "success");
+    expect({ foo: "barr" }).toMatchMock(HelloWorld.name, "foo", "success");
   });
 
   it("Should create another method", () => {
@@ -29,7 +29,11 @@ describe("toMatchMock", () => {
     expect({error: 'yes'}).toMatchMock(HelloWorld.name, "bar", "no-valid-params");
   });
 
-  it("Should generate mocks", async done => {
+  it("Should match mock shape", () => {
+    expect({ some: 'value', id: '1234sddd56', data: { _id: '1234'}}).toMatchMock(HelloWorld.name, "shape", "success", ["id", "data._id"]);
+  });
+
+  it.skip("Should generate mocks", async done => {
     const project = new Project({ compilerOptions: { outDir: "dist/mocks", declaration: true } });
 
     glob("**/*.ts.mockshot", async function(er, files) {
