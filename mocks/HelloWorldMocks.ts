@@ -1,4 +1,4 @@
-class HelloWorld {
+export class HelloWorldMocks {
     static bar(mock: "success" | "no-valid-params"): any {
         switch (mock) {
             case "success":

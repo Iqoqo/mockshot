@@ -2,9 +2,9 @@
   "name": "mockshot",
   "version": "0.0.1",
   "description": "Generate mocks from your snapshot tests",
-  "main": "dist/lib/toMatchMock.js",
+  "main": "dist",
   "bin": {
-    "mockshot": "node ./dist/lib/index.js"
+    "mockshot": "node ./dist/run.js"
   },
   "repository": "https://github.com/Iqoqo/mockshot.git",
   "author": "Shlomo Kraus <shlomo.kraus@iqoqo.co>",
@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "start": "node ./dist/run.js"
   },
   "jest": {
     "rootDir": ".",
@@ -58,6 +59,7 @@
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-local-resolve": "^1.0.7",
     "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-tslint": "^0.1.34",
     "rollup-plugin-typescript2": "^0.15.1",
     "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",

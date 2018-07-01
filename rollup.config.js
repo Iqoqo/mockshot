@@ -26,7 +26,15 @@ export default {
     localResolve(),
     
     commonjs({
-      include: ["node_modules/**"]
+      include: ["node_modules/**"],
+      namedExports: {
+        lodash: [
+          "get",
+          "set",
+          "cloneDeep"
+        ],
+        glob: ["glob"]
+      }
     }),
 
     typescript({ useTsconfigDeclarationDir: true }),
