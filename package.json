@@ -1,6 +1,6 @@
 {
   "name": "mockshot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generate mocks from your snapshot tests",
   "main": "dist",
   "bin": {
@@ -46,10 +46,10 @@
     "@types/node": "10.3.1",
     "prettier": "1.11.1",
     "rimraf": "2.6.2",
-    "ts-simple-ast": "12.4.0",
     "typescript": "2.7.2"
   },
   "dependencies": {
+    "ts-simple-ast": "12.4.0",
     "glob": "^7.1.2",
     "jest": "^23.1.0",
     "json-beautify": "^1.0.1",
