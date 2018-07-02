@@ -31,6 +31,7 @@ export async function generateMocks() {
         }
         const snapshot = JSON.parse(state._snapshotData[key]);
         let classDef = mockDef[snapshot.className];
+        
         if (!classDef) {
           classDef = {};
           mockDef[snapshot.className] = classDef;

@@ -27,7 +27,8 @@ function toMatchMock(received, className: string, methodName: string, mockName: 
 
   }
   const snapshot = { className, methodName, mockName,  mock: received}
-  const result = expect(snapshot).toMatchSnapshot('[mockshot]');
+  const snapshotName = `[${className} ${methodName} ${mockName}]`;
+  const result = expect(snapshot).toMatchSnapshot(`[mockshot] [${snapshotName}]`);
   const pass = result===undefined;
   return { pass };
 }
