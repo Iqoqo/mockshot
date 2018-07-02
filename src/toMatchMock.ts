@@ -6,11 +6,19 @@ expect.addSnapshotSerializer({
   print: val => pretty(val)
 });
 
-function getSnapshotName(testName) {
-  return `${testName}: [mockshot] 1`;
+function getSnapshotName(testName, snapshotTag: string) {
+  // TODO: If there are more the 1 snapshots (indicated by the number at the end) throw an exception
+  return `${testName}: ${snapshotTag} 1`;
+}
+
+function getSnapshotTag(className: string, methodName: string, mockName: string) {
+  const snapshotNameTag = `[mockshot] [[${className} ${methodName} ${mockName}]]`;
+
+  return snapshotNameTag; 
 }
 function toMatchMock(received, className: string, methodName: string, mockName: string, ignoredKeyPaths?: string[]) {
-  const snapshotName = getSnapshotName(this.currentTestName);
+  const snapshotTag = getSnapshotTag(className, methodName, mockName);
+  const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
   
   if (ignoredKeyPaths && currentSnapshot) {
@@ -27,8 +35,8 @@ function toMatchMock(received, className: string, methodName: string, mockName: 
 
   }
   const snapshot = { className, methodName, mockName,  mock: received}
-  const snapshotName = `[${className} ${methodName} ${mockName}]`;
-  const result = expect(snapshot).toMatchSnapshot(`[mockshot] [${snapshotName}]`);
+  const snapshotNameTag = `[${className} ${methodName} ${mockName}]`;
+  const result = expect(snapshot).toMatchSnapshot(`[mockshot] [${snapshotNameTag}]`);
   const pass = result===undefined;
   return { pass };
 }
