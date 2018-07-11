@@ -1,6 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toMatchMock Should create another method: [mockshot] 1`] = `
+exports[`toMatchMock Should create another method: [mockshot] [[HelloWorld bar no-valid-params]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "bar",
+  "mock": {
+    "error": "yes"
+  },
+  "mockName": "no-valid-params"
+}
+`;
+
+exports[`toMatchMock Should create another method: [mockshot] [[HelloWorld bar success]] 1`] = `
 {
   "className": "HelloWorld",
   "methodName": "bar",
@@ -13,18 +24,7 @@ exports[`toMatchMock Should create another method: [mockshot] 1`] = `
 }
 `;
 
-exports[`toMatchMock Should create another method: [mockshot] 2`] = `
-{
-  "className": "HelloWorld",
-  "methodName": "bar",
-  "mock": {
-    "error": "yes"
-  },
-  "mockName": "no-valid-params"
-}
-`;
-
-exports[`toMatchMock Should match mock shape: [mockshot] 1`] = `
+exports[`toMatchMock Should match mock shape: [mockshot] [[HelloWorld shape success]] 1`] = `
 {
   "className": "HelloWorld",
   "methodName": "shape",
@@ -39,7 +39,7 @@ exports[`toMatchMock Should match mock shape: [mockshot] 1`] = `
 }
 `;
 
-exports[`toMatchMock Should return correct schema: [mockshot] 1`] = `
+exports[`toMatchMock Should return correct schema: [mockshot] [[HelloWorld foo success]] 1`] = `
 {
   "className": "HelloWorld",
   "methodName": "foo",

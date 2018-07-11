@@ -31,7 +31,7 @@ export async function generateMocks() {
         }
         const snapshot = JSON.parse(state._snapshotData[key]);
         let classDef = mockDef[snapshot.className];
-        
+
         if (!classDef) {
           classDef = {};
           mockDef[snapshot.className] = classDef;
@@ -92,6 +92,10 @@ export async function generateMocks() {
           return `"${value}"`;
         });
         const types = mockTypes.join(" | ");
+
+        const prop = classDeclaration.addProperty({
+          isStatic: true, name: methodName
+        });
 
         const method = classDeclaration.addMethod({
           isStatic: true,

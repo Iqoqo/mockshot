@@ -1,20 +1,24 @@
 export class HelloWorldMocks {
-    static bar(mock: "success" | "no-valid-params"): any {
+    static bar;
+
+    static bar(mock: "no-valid-params" | "success"): any {
         switch (mock) {
+            case "no-valid-params":
+                return {
+                  "error": "yes"
+                }
             case "success":
                 return {
                   "api": {
                     "data": "123"
                   }
                 }
-            case "no-valid-params":
-                return {
-                  "error": "yes"
-                }
             default:
                 throw Error("Unknown mock: "+mock);
         }
     }
+
+    static shape;
 
     static shape(mock: "success"): any {
         switch (mock) {
@@ -30,6 +34,8 @@ export class HelloWorldMocks {
                 throw Error("Unknown mock: "+mock);
         }
     }
+
+    static foo;
 
     static foo(mock: "success"): any {
         switch (mock) {

@@ -1,5 +1,15 @@
 import { cloneDeep, get, set } from 'lodash';
 import pretty from 'json-pretty'
+import { generateMocks } from './generateMocks';
+
+declare global {
+  namespace jest {
+    // tslint:disable-next-line:interface-name
+    interface Matchers<R> {
+      toMatchMock(className: string, methodName: string, mockName: string, ignoredKeyPaths?: string[]): R
+    }
+  }
+}
 
 expect.addSnapshotSerializer({
   test: val => val.mock,
@@ -16,7 +26,18 @@ function getSnapshotTag(className: string, methodName: string, mockName: string)
 
   return snapshotNameTag; 
 }
-function toMatchMock(received, className: string, methodName: string, mockName: string, ignoredKeyPaths?: string[]) {
+
+let commonSnapshotState;
+
+afterAll(async() => { 
+  if(commonSnapshotState.added > 0 || commonSnapshotState.updated > 0){
+    await generateMocks();
+  }
+});
+
+function toMatchMock(received, className: string, methodName: string, mockName: string, ignoredKeyPaths?: string[], customMatcher?: any) {
+  commonSnapshotState = this.snapshotState;
+
   const snapshotTag = getSnapshotTag(className, methodName, mockName);
   const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
@@ -40,6 +61,7 @@ function toMatchMock(received, className: string, methodName: string, mockName: 
   const pass = result===undefined;
   return { pass };
 }
+
 
 expect.extend({ toMatchMock });
 
