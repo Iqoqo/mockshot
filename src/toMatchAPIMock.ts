@@ -76,19 +76,24 @@ function toMatchAPIMock(
       }
     });
   }
+
   const snapshot = {
     method: received.config.method.toUpperCase(),
     url: received.config.url,
     mockName: returnValue,
-    mock: received
+    mock: { status: received.status, body: received.data }
   };
+
   const snapshotNameTag = `[${received.config.method.toUpperCase()} ${
-    received.url
+    received.config.url
   } ${returnValue}]`;
+
   const result = expect(snapshot).toMatchSnapshot(
     `[mockshot] [${snapshotNameTag}]`
   );
+
   const pass = result === undefined;
+
   return { pass };
 }
 
