@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toMatchAPIMock() Should work: [mockshot] [[undefined undefined success]] 1`] = `
+{
+  "mock": {},
+  "mockName": "success"
+}
+`;

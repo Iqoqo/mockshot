@@ -6,14 +6,17 @@ declare global {
   namespace jest {
     // tslint:disable-next-line:interface-name
     interface Matchers<R> {
-      toMatchMock(
-        className: string,
-        methodName: string,
-        mockName: string,
-        ignoredKeyPaths?: string[]
-      ): R;
+      toMatchAPIMock(mockName: string, ignoredKeyPaths?: string[]): R;
     }
   }
+}
+
+export enum HttpMethods {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  PATCH = "PATCH",
+  DELETE = "DELETE"
 }
 
 expect.addSnapshotSerializer({
@@ -27,13 +30,11 @@ function getSnapshotName(testName, snapshotTag: string) {
 }
 
 function getSnapshotTag(
-  className: string,
-  methodName: string,
+  methodName: HttpMethods,
+  url: string,
   mockName: string
 ) {
-  const snapshotNameTag = `[mockshot] [[${className} ${methodName} ${mockName}]]`;
-
-  return snapshotNameTag;
+  return `[mockshot] [[${methodName} ${url} ${mockName}]]`;
 }
 
 let commonSnapshotState;
@@ -47,17 +48,19 @@ afterAll(async () => {
   }
 });
 
-function toMatchMock(
+function toMatchAPIMock(
   received,
-  className: string,
-  methodName: string,
-  mockName: string,
+  returnValue: string,
   ignoredKeyPaths?: string[],
   customMatcher?: any
 ) {
   commonSnapshotState = this.snapshotState;
 
-  const snapshotTag = getSnapshotTag(className, methodName, mockName);
+  const snapshotTag = getSnapshotTag(
+    received.method,
+    received.url,
+    returnValue
+  );
   const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
 
@@ -73,8 +76,15 @@ function toMatchMock(
       }
     });
   }
-  const snapshot = { className, methodName, mockName, mock: received };
-  const snapshotNameTag = `[${className} ${methodName} ${mockName}]`;
+  const snapshot = {
+    mrthod: received.method,
+    url: received.url,
+    mockName: returnValue,
+    mock: received
+  };
+  const snapshotNameTag = `[${received.methodName} ${
+    received.url
+  } ${returnValue}]`;
   const result = expect(snapshot).toMatchSnapshot(
     `[mockshot] [${snapshotNameTag}]`
   );
@@ -82,6 +92,6 @@ function toMatchMock(
   return { pass };
 }
 
-expect.extend({ toMatchMock });
+expect.extend({ toMatchAPIMock });
 
-export { toMatchMock };
+export { toMatchAPIMock };
