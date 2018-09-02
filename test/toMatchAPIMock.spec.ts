@@ -1,18 +1,10 @@
 import "../src/toMatchAPIMock";
-import fetch from "fetch";
+import axios from "axios";
+const adapter = require("axios/lib/adapters/http");
 
-describe("toMatchAPIMock()", () => {
-  it("Should work", () => {
-    const getResult = async () => {
-      const res = await fetch("https://www.google.com");
-      let b = await res.json();
-      console.log(3242312);
-      console.log(b);
-      return b;
-      done();
-    };
-
-    // console.log(getResult);
-    expect(getResult).toMatchAPIMock("success");
+describe("toMatchApiMock()", () => {
+  it.only("Should work", async () => {
+    const res = await axios.get("https://www.google.com", { adapter });
+    expect(res).toMatchAPIMock("success");
   });
 });

@@ -57,7 +57,7 @@ function toMatchAPIMock(
   commonSnapshotState = this.snapshotState;
 
   const snapshotTag = getSnapshotTag(
-    received.method,
+    received.config.method.toUpperCase(),
     received.url,
     returnValue
   );
@@ -77,12 +77,12 @@ function toMatchAPIMock(
     });
   }
   const snapshot = {
-    mrthod: received.method,
-    url: received.url,
+    method: received.config.method.toUpperCase(),
+    url: received.config.url,
     mockName: returnValue,
     mock: received
   };
-  const snapshotNameTag = `[${received.methodName} ${
+  const snapshotNameTag = `[${received.config.method.toUpperCase()} ${
     received.url
   } ${returnValue}]`;
   const result = expect(snapshot).toMatchSnapshot(
