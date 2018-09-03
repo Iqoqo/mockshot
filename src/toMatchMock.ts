@@ -1,12 +1,17 @@
-import { cloneDeep, get, set } from 'lodash';
-import pretty from 'json-pretty'
-import { generateMocks } from './generateMocks';
+import { cloneDeep, get, set } from "lodash";
+import pretty from "json-pretty";
+import { generateMocks } from "./generateMocks";
 
 declare global {
   namespace jest {
     // tslint:disable-next-line:interface-name
     interface Matchers<R> {
-      toMatchMock(className: string, methodName: string, mockName: string, ignoredKeyPaths?: string[]): R
+      toMatchMock(
+        className: string,
+        methodName: string,
+        mockName: string,
+        ignoredKeyPaths?: string[]
+      ): R;
     }
   }
 }
@@ -21,27 +26,41 @@ function getSnapshotName(testName, snapshotTag: string) {
   return `${testName}: ${snapshotTag} 1`;
 }
 
-function getSnapshotTag(className: string, methodName: string, mockName: string) {
+function getSnapshotTag(
+  className: string,
+  methodName: string,
+  mockName: string
+) {
   const snapshotNameTag = `[mockshot] [[${className} ${methodName} ${mockName}]]`;
 
-  return snapshotNameTag; 
+  return snapshotNameTag;
 }
 
 let commonSnapshotState;
 
-afterAll(async() => { 
-  if(commonSnapshotState.added > 0 || commonSnapshotState.updated > 0){
+afterAll(async () => {
+  if (
+    commonSnapshotState &&
+    (commonSnapshotState.added > 0 || commonSnapshotState.updated > 0)
+  ) {
     await generateMocks();
   }
 });
 
-function toMatchMock(received, className: string, methodName: string, mockName: string, ignoredKeyPaths?: string[], customMatcher?: any) {
+function toMatchMock(
+  received,
+  className: string,
+  methodName: string,
+  mockName: string,
+  ignoredKeyPaths?: string[],
+  customMatcher?: any
+) {
   commonSnapshotState = this.snapshotState;
 
   const snapshotTag = getSnapshotTag(className, methodName, mockName);
   const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
-  
+
   if (ignoredKeyPaths && currentSnapshot) {
     const parsedSnapshot = JSON.parse(currentSnapshot);
     received = cloneDeep(received);
@@ -49,19 +68,19 @@ function toMatchMock(received, className: string, methodName: string, mockName: 
     ignoredKeyPaths.forEach(keyPath => {
       const val = get(parsedSnapshot.mock, keyPath);
       const target = get(received, keyPath);
-      if(val && target && typeof(val) === typeof(target)){
+      if (val && target && typeof val === typeof target) {
         set(received, keyPath, val);
       }
-    })
-
+    });
   }
-  const snapshot = { className, methodName, mockName,  mock: received}
+  const snapshot = { className, methodName, mockName, mock: received };
   const snapshotNameTag = `[${className} ${methodName} ${mockName}]`;
-  const result = expect(snapshot).toMatchSnapshot(`[mockshot] [${snapshotNameTag}]`);
-  const pass = result===undefined;
+  const result = expect(snapshot).toMatchSnapshot(
+    `[mockshot] [${snapshotNameTag}]`
+  );
+  const pass = result === undefined;
   return { pass };
 }
-
 
 expect.extend({ toMatchMock });
 
