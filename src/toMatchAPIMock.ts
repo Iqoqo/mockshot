@@ -45,16 +45,21 @@ async function toMatchApiMock(
 
   switch (requestModules) {
     case RequestModules.r2:
-      const res = await received.response;
+      const res = received.response;
       method = received.opts.method.toUpperCase();
       url = res.url;
       mock = { status: res.status, body: res.body }
       break;
     case RequestModules.axios:
-    default:
       method = received.config.method.toUpperCase();
       url = received.url;
       mock = { status: received.status, body: received.data }
+      break;
+    case RequestModules.fetch:
+    default:
+      method = received.method || "GET" // this doesn't work
+      url = received.url
+      mock = { status: received.status, body: await received.text() }
       break;
   }
 

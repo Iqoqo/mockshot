@@ -18,9 +18,19 @@ describe("toMatchApiMock()", () => {
     expect(res).toMatchApiMock(RequestModules.axios, "failure");
   });
 
-  it.only("Should work with r2 module", async () => {
-    const res = await r2("https://www.example.com");
+  it.skip("Should work with reuqest module", async () => {
+    const res = await request("https://www.example.com");
+    await expect(res).toMatchApiMock(RequestModules.request, "success");
+  });
+
+  it("Should work with r2 module", async () => {
+    const res = await r2.get("https://www.example.com");
     await expect(res).toMatchApiMock(RequestModules.r2, "success");
+  });
+
+  it("Should work with node-fetch module", async () => {
+    const res = await fetch("https://www.example.com");
+    await expect(res).toMatchApiMock(RequestModules.fetch, "success");
   });
 
 
