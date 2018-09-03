@@ -3,7 +3,9 @@ import axios from "axios";
 import { request } from "https";
 import { RequestModules } from "../src/toMatchApiMock";
 import r2 from "r2";
+import request from "request";
 const adapter = require("axios/lib/adapters/http");
+var request = require('request');
 
 describe("toMatchApiMock()", () => {
   it("Should work with axios module", async () => {
@@ -16,15 +18,10 @@ describe("toMatchApiMock()", () => {
     expect(res).toMatchApiMock(RequestModules.axios, "failure");
   });
 
-  it("Should work with reuqest module", async () => {
-    const res = await request("https://www.example.com");
-    console.log(res);
-    expect(res).toMatchApiMock(RequestModules.request, "success");
+  it.only("Should work with r2 module", async () => {
+    const res = await r2("https://www.example.com");
+    await expect(res).toMatchApiMock(RequestModules.r2, "success");
   });
 
-  it.only("Should work with r2 module", async () => {
-    const res = await r2.get("https://www.example.com");
-    expect(res).toMatchApiMock(RequestModules.r2, "success");
-  });
 
 });
