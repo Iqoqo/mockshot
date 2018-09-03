@@ -13,8 +13,13 @@ describe("toMatchApiMock()", () => {
   });
 
   it("Should fail", async () => {
+<<<<<<< HEAD
     const res = await axios.get("https://www.example.com", { adapter });
     expect(res).toMatchApiMock(RequestModules.axios, "failure");
+=======
+    const res = await axios.get("https://www.google.com", { adapter });
+    expect(res).toMatchAPIMock("failure");
+>>>>>>> f3fe8f30253519461bf362c0b17a874272882a52
   });
 
   it("Should work with reuqest module", async () => {
