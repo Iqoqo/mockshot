@@ -31,11 +31,6 @@
     "collectCoverage": false,
     "coveragePathIgnorePatterns": ["/node_modules/", "/test/", "/dist/"]
   },
-  "mockshot": {
-    "rootDir": ".",
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/", "/dist/"],
-    "outputDir": "./mocks"
-  },
   "devDependencies": {
     "@types/node": "10.3.1",
     "prettier": "1.11.1",
