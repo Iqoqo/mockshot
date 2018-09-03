@@ -18,11 +18,10 @@ export class API {
 }
 
 export interface postResponses {
-    "/bye/world": { success: any };
-    "/hello/world": { fail: any };
+    "/hello/world": {success: any,fail: any};
 }
 
 export interface getResponses {
-    "/bye/world": { success: any };
-    "/hello/world": { fail: any };
+    "/bye/world": {success: any};
+    "/hello/world": {fail: any};
 }

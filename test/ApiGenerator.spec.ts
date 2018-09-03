@@ -1,10 +1,12 @@
 import { ApiGenerator } from "../src/generators/ApiGenerator";
 import { API as API2 } from "../API";
+const util = require('util')
+
 
 // API2.get("/hello/world").
-// API2.get("/bye/world").
+// API2.post("/hello/world").success
 
-const dummySnapshot = [
+const snapshot = [
   {
     url: "/hello/world",
     httpMethod: "post",
@@ -43,16 +45,10 @@ const dummySnapshot = [
   }
 ];
 
-const mockObj = {
-  GET: {
-    "/hello/world": { success: {}, fail: {} }
-  }
-};
-
 describe("ApiGenerator", () => {
-  it("should generate dummy API endpoint mock", async () => {
+  it("should generate API endpoint mock", async () => {
     const generator = new ApiGenerator(".");
-    await generator.generate(dummySnapshot);
+    await generator.generate(snapshot); \
   });
 });
 
