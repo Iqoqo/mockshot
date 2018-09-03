@@ -17,18 +17,17 @@ export class GeneratorRunner {
     await this.project.save();
   }
 
-  private runGenerator(generator: MockGenerator) {
+  private runGenerator = (generator: MockGenerator) => {
     const fileName = generator.getFilename();
     const fileDeclaration = this.createSourceFile(fileName);
     generator.generate(fileDeclaration, this.snapshots);
   }
 
-  private createSourceFile(mockFileName: string) {
+  private createSourceFile = (mockFileName: string) => {
     try {
       fs.unlinkSync(this.outDir + mockFileName);
       console.log("File exists", mockFileName, "removing...");
     } catch (ex) {}
-
     return this.project.createSourceFile(this.outDir + mockFileName);
   }
 }
