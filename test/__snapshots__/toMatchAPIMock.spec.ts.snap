@@ -11,6 +11,15 @@ exports[`toMatchApiMock() Should fail: [mockshot] [[GET undefined failure]] 1`] 
 }
 `;
 
+exports[`toMatchApiMock() Should not work with unsupported response object (not of type axios, r2, fetch): [mockshot] [[undefined undefined failure-unsupported-response]] 1`] = `
+{
+  "mock": {
+    "status": -1
+  },
+  "mockName": "failure-unsupported-response"
+}
+`;
+
 exports[`toMatchApiMock() Should work with axios module: [mockshot] [[GET undefined success]] 1`] = `
 {
   "method": "GET",
@@ -22,7 +31,7 @@ exports[`toMatchApiMock() Should work with axios module: [mockshot] [[GET undefi
 }
 `;
 
-exports[`toMatchApiMock() Should work with node-fetch module: [mockshot] [[GET https://www.example.com/ success]] 1`] = `
+exports[`toMatchApiMock() Should work with fetch module: [mockshot] [[GET https://www.example.com/ success]] 1`] = `
 {
   "method": "GET",
   "mock": {
