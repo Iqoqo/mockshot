@@ -1,4 +1,5 @@
 import { ApiGenerator } from "../generators/ApiGenerator";
+import { GeneratorRunner } from "../GeneratorRunner";
 import { SnapshotFetcher } from "./util";
 
 export function run(args: string[]) {
@@ -6,6 +7,8 @@ export function run(args: string[]) {
 
   const snapshots = SnapshotFetcher.getSnapshots();
 
-  const apiGenerator = new ApiGenerator(outputDir);
-  apiGenerator.generate(snapshots);
+  const generators = [new ApiGenerator()];
+
+  const generatorRunner = new GeneratorRunner(outputDir, generators, snapshots);
+  generatorRunner.run();
 }

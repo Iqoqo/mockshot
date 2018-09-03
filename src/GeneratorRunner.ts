@@ -1,4 +1,4 @@
-import Project, { CodeBlockWriter } from "ts-simple-ast";
+import Project, { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import fs from "fs";
 
 export class GeneratorRunner {
@@ -19,8 +19,8 @@ export class GeneratorRunner {
 
   private runGenerator(generator: MockGenerator) {
     const fileName = generator.getFilename();
-    const fileDecleration = this.createSourceFile(fileName);
-    generator.generate(fileDecleration, this.snapshots);
+    const fileDeclaration = this.createSourceFile(fileName);
+    generator.generate(fileDeclaration, this.snapshots);
   }
 
   private createSourceFile(mockFileName: string) {
@@ -33,7 +33,7 @@ export class GeneratorRunner {
   }
 }
 
-interface MockGenerator {
-  generate: (fileDecleration, snapshots: object[]) => void;
+export interface MockGenerator {
+  generate: (fileDeclaration: SourceFile, snapshots: object[]) => void;
   getFilename: () => string;
 }

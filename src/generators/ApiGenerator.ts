@@ -1,21 +1,19 @@
-import Project, { CodeBlockWriter } from "ts-simple-ast";
+import Project, { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import fs from "fs";
 const util = require("util");
+
+import { MockGenerator } from "../GeneratorRunner";
 
 const mockFileName = "API.ts";
 const methodParameter = "url";
 
-export class ApiGenerator {
-  private project: Project;
-
-  constructor(readonly outDir = "dist/") {
-    this.project = new Project();
+export class ApiGenerator implements MockGenerator {
+  getFilename() {
+    return "API.ts";
   }
 
-  async generate(snapshots) {
+  async generate(fileDeclaration: SourceFile, snapshots: object[]) {
     const parsed = this.parse(snapshots);
-
-    const fileDeclaration = await this.createSourceFile();
 
     fileDeclaration
       .addClass({ name: "API" })
@@ -31,19 +29,6 @@ export class ApiGenerator {
       });
 
     fileDeclaration.addInterfaces(this.getInterfacesFrom(parsed));
-
-    await this.project.save();
-
-    return fileDeclaration;
-  }
-
-  private async createSourceFile() {
-    try {
-      await fs.unlinkSync(this.outDir + mockFileName);
-      console.log("File exists", mockFileName, "removing...");
-    } catch (ex) {}
-
-    return this.project.createSourceFile(this.outDir + mockFileName);
   }
 
   private getMethodsFrom(parsed) {
