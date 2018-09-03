@@ -10,9 +10,11 @@ export enum HttpMethods {
   DELETE = "DELETE"
 }
 
-export enum RequestModules {
-  request = "request", 
-  axios = "axios"
+export const RequestModules = {
+  request: "request",
+  axios: "axios",
+  r2: "r2",
+  fetch: "fetch"
 }
 
 expect.addSnapshotSerializer({
@@ -44,38 +46,62 @@ afterAll(async () => {
   }
 });
 
-function toMatchApiMock(
+async function toMatchApiMock(
   received,
+  requestModules,
   returnValue: string
 ) {
   commonSnapshotState = this.snapshotState;
 
-  const snapshotTag = getSnapshotTag(
-    received.config.method.toUpperCase(),
-    received.url,
-    returnValue
-  );
-  const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
-  const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
+  let url;
+  let method;
+  let mock;
 
-  const snapshot = {
-    method: received.config.method.toUpperCase(),
-    url: received.config.url,
-    mockName: returnValue,
-    mock: { status: received.status, body: received.data }
-  };
+  console.log(requestModules);
+  switch (requestModules) {
+    case RequestModules.axios:
+      method = received.config.method.toUpperCase();
+      url = received.url;
+      mock = { status: received.status, body: received.data }
+      break;
+    case RequestModules.r2:
+      const res = await received.response;
+      console.log("in r2");
+      console.log(res.url);
+      console.log(res.status);
+      console.log(received.opts.method);
+      console.log(received);
+      method = received.opts.method.toUpperCase();
+      url = res.url;
+      mock = { status: res.status, body: res.data }
+      break;
+    case RequestModules.fetch:  break;
+    case RequestModules.request:
+    default: break;
+  }
 
-  const snapshotNameTag = `[${received.config.method.toUpperCase()} ${
-    received.config.url
-  } ${returnValue}]`;
+const snapshotTag = getSnapshotTag(
+  method, url, returnValue
+);
+const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
+const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
 
-  const result = expect(snapshot).toMatchSnapshot(
-    `[mockshot] [${snapshotNameTag}]`
-  );
+const snapshot = {
+  method,
+  url,
+  mockName: returnValue,
+  mock
+};
 
-  const pass = result === undefined;
+const snapshotNameTag = `[${received.config.method.toUpperCase()} ${url} ${returnValue}]`;
 
-  return { pass };
+const result = expect(snapshot).toMatchSnapshot(
+  `[mockshot] [${snapshotNameTag}]`
+);
+
+const pass = result === undefined;
+
+return { pass };
 }
 
 expect.extend({ toMatchApiMock });
