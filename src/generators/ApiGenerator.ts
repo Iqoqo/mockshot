@@ -1,31 +1,19 @@
-import Project, { CodeBlockWriter } from "ts-simple-ast";
+import Project, { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import fs from "fs";
-const util = require('util')
+const util = require("util");
+
+import { MockGenerator } from "../GeneratorRunner";
 
 const mockFileName = "API.ts";
 const methodParameter = "url";
 
-export class ApiGenerator {
-  private project: Project;
-
-  constructor(readonly outDir = "dist/") {
-    this.project = new Project();
+export class ApiGenerator implements MockGenerator {
+  getFilename() {
+    return "API.ts";
   }
 
-  private async createSourceFile() {
-    try {
-      await fs.unlinkSync(this.outDir + mockFileName);
-      console.log("File exists", mockFileName, "removing...");
-    } catch (ex) { }
-
-    return this.project.createSourceFile(this.outDir + mockFileName)
-  }
-
-
-  async generate(snapshot) {
-    const parsed = this.parse(snapshot)
-
-    const fileDeclaration = await this.createSourceFile()
+  async generate(fileDeclaration: SourceFile, snapshots: object[]) {
+    const parsed = this.parse(snapshots);
 
     fileDeclaration
       .addClass({ name: "API" })
@@ -33,15 +21,14 @@ export class ApiGenerator {
       .addMethods(this.getMethodsFrom(parsed))
       .map(methodDeclaration => {
         methodDeclaration.setBodyText(
-          this.getSwitchStatement(methodParameter, parsed[methodDeclaration.getName()])
-        )
-      })
+          this.getSwitchStatement(
+            methodParameter,
+            parsed[methodDeclaration.getName()]
+          )
+        );
+      });
 
-    fileDeclaration.addInterfaces(this.getInterfacesFrom(parsed))
-
-    await this.project.save();
-
-    return fileDeclaration
+    fileDeclaration.addInterfaces(this.getInterfacesFrom(parsed));
   }
 
   private getMethodsFrom(parsed) {
@@ -50,45 +37,46 @@ export class ApiGenerator {
       parameters: [{ name: methodParameter, type: "T" }],
       name: `${method}<T extends keyof ${method}Responses>`,
       returnType: `${method}Responses[T]`
-    }))
+    }));
   }
 
   private getInterfacesFrom(parsed) {
     return Object.keys(parsed).map(method => ({
       name: `${method}Responses`,
       isExported: true,
-      properties: Object.keys(parsed[method])
-        .map(url => {
-          const types = Object.keys(parsed[method][url])
-            .map(type => `${type}: any`).join()
-          return { name: `"${url}"`, type: `{${types}}` }
-        })
-    }))
+      properties: Object.keys(parsed[method]).map(url => {
+        const types = Object.keys(parsed[method][url])
+          .map(type => `${type}: any`)
+          .join();
+        return { name: `"${url}"`, type: `{${types}}` };
+      })
+    }));
   }
 
   private parse(snapshots) {
-    const parsed = {}
+    const parsed = {};
     snapshots.map(snapshot => {
-      this.addToObj(parsed, snapshot.httpMethod, (methodContent) =>
-        this.addToObj(methodContent, snapshot.url, (urlContent) =>
-          this.addToObj(urlContent, snapshot.mockName, (mockContent) => {
-            if (snapshot.body) mockContent["body"] = snapshot.body
-            if (snapshot.error) mockContent["error"] = snapshot.error
-            if (snapshot.statusCode) mockContent["statusCode"] = snapshot.statusCode
+      this.addToObj(parsed, snapshot.httpMethod, methodContent =>
+        this.addToObj(methodContent, snapshot.url, urlContent =>
+          this.addToObj(urlContent, snapshot.mockName, mockContent => {
+            if (snapshot.body) mockContent["body"] = snapshot.body;
+            if (snapshot.error) mockContent["error"] = snapshot.error;
+            if (snapshot.statusCode)
+              mockContent["statusCode"] = snapshot.statusCode;
           })
         )
-      )
-    })
-    return parsed
+      );
+    });
+    return parsed;
   }
 
   private addToObj(obj, name, cb) {
-    const subObj = obj[name] || {}
+    const subObj = obj[name] || {};
 
-    cb(subObj)
+    cb(subObj);
 
-    obj[name] = subObj
-    return obj
+    obj[name] = subObj;
+    return obj;
   }
 
   private getSwitchStatement(methodParameter: string, options: object) {
@@ -99,7 +87,11 @@ export class ApiGenerator {
           Object.keys(options).map(key =>
             writer
               .write(`case "${key}":`)
-              .indentBlock(() => writer.write(`return ${util.inspect(options[key], { depth: null })}`))
+              .indentBlock(() =>
+                writer.write(
+                  `return ${util.inspect(options[key], { depth: null })}`
+                )
+              )
           )
         );
   }

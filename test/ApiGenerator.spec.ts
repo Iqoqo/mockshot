@@ -1,6 +1,6 @@
 import { ApiGenerator } from "../src/generators/ApiGenerator";
 
-const snapshot = [
+const snapshots = [
   {
     url: "/hello/world",
     httpMethod: "post",
@@ -42,7 +42,7 @@ const snapshot = [
 describe("ApiGenerator", () => {
   it("should generate API endpoint mock", async () => {
     const generator = new ApiGenerator();
-    const fileDeclaration = await generator.generate(snapshot);
+    const fileDeclaration = await generator.generate(snapshots);
 
     expect(fileDeclaration._compilerNode.text).toMatchSnapshot("[API] [generator]")
   });

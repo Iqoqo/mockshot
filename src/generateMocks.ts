@@ -1,9 +1,9 @@
-import {glob} from "glob";
+import { glob } from "glob";
 import * as path from "path";
 import Project from "ts-simple-ast";
 import fs from "fs";
 import { SnapshotState } from "jest-snapshot";
-import pretty from 'json-pretty'
+import pretty from "json-pretty";
 
 export async function generateMocks() {
   const project = new Project({
@@ -58,9 +58,9 @@ export async function generateMocks() {
 
     const classNames = Object.keys(mockDef);
     classNames.forEach(async className => {
-      const mockClassName = className+'Mocks';
+      const mockClassName = className + "Mocks";
 
-      console.log('Creating class', mockClassName);
+      console.log("Creating class", mockClassName);
 
       const mockFileName = `mocks/${mockClassName}.ts`;
 
@@ -68,8 +68,7 @@ export async function generateMocks() {
       try {
         await fs.unlinkSync(mockFileName);
         console.log("File exists", mockFileName, "removing...");
-      } catch (ex) {
-      }
+      } catch (ex) {}
 
       myClassFile = project.createSourceFile(mockFileName);
 
@@ -84,7 +83,7 @@ export async function generateMocks() {
       const methodNames = Object.keys(methods);
 
       methodNames.forEach(methodName => {
-        console.log('Creating method mocks', methodName);
+        console.log("Creating method mocks", methodName);
 
         const mocks = methods[methodName];
         const mockNames = Object.keys(mocks);
@@ -94,7 +93,8 @@ export async function generateMocks() {
         const types = mockTypes.join(" | ");
 
         const prop = classDeclaration.addProperty({
-          isStatic: true, name: methodName
+          isStatic: true,
+          name: methodName
         });
 
         const method = classDeclaration.addMethod({
@@ -107,13 +107,13 @@ export async function generateMocks() {
         method.setBodyText(writer =>
           writer.write("switch (mock)").block(() => {
             mockNames.forEach(mockName => {
-              writer.write(`case "${mockName}":`).indentBlock(()=>{
+              writer.write(`case "${mockName}":`).indentBlock(() => {
                 writer.write(`return ${pretty(mocks[mockName])}`);
-              })
+              });
             });
-            writer.write(`default:`).indentBlock(()=>{
+            writer.write(`default:`).indentBlock(() => {
               writer.write(`throw Error("Unknown mock: "+mock);`);
-            })
+            });
           })
         );
       });
@@ -121,8 +121,8 @@ export async function generateMocks() {
 
     await project.save();
 
-    console.log('Saved Typescript source...emitting vanilla js');
+    console.log("Saved Typescript source...emitting vanilla js");
     await project.emit();
-    console.log('Done!');
+    console.log("Done!");
   });
 }
