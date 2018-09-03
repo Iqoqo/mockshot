@@ -1,6 +1,6 @@
 import { cloneDeep, get, set } from "lodash";
 import pretty from "json-pretty";
-import { generateMocks } from "./generateMocks";
+import { generateMocks } from "../generateMocks";
 
 export enum HttpMethods {
   GET = "GET",
@@ -59,10 +59,10 @@ function toMatchApiMock(
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
 
   const snapshot = {
-    method: received.config.method.toUpperCase(),
+    httpMethod: received.config.method.toUpperCase(),
     url: received.config.url,
     mockName: returnValue,
-    mock: { status: received.status, body: received.data }
+    mock: { statusCode: received.status, body: received.data }
   };
 
   const snapshotNameTag = `[${received.config.method.toUpperCase()} ${
@@ -70,7 +70,7 @@ function toMatchApiMock(
   } ${returnValue}]`;
 
   const result = expect(snapshot).toMatchSnapshot(
-    `[mockshot] [${snapshotNameTag}]`
+    `[mockshot] [APISnap] [${snapshotNameTag}]`
   );
 
   const pass = result === undefined;

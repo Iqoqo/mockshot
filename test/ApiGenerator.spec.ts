@@ -4,10 +4,12 @@ const snapshots = [
   {
     url: "/hello/world",
     httpMethod: "post",
-    statusCode: 200,
-    body: {
-      foo: {
-        bar: "123"
+    mock: {
+      statusCode: 200,
+      body: {
+        foo: {
+          bar: "123"
+        }
       }
     },
     mockName: "success"
@@ -15,26 +17,28 @@ const snapshots = [
   {
     url: "/hello/world",
     httpMethod: "post",
-    statusCode: 501,
-    error: "not implemented",
+    mock: {
+      statusCode: 501,
+      error: "not implemented"
+    },
     mockName: "fail"
   },
   {
     url: "/bye/world",
     httpMethod: "get",
-    statusCode: 200,
-    body: {
-      foo: {
-        bar: "123"
-      }
+    mock: {
+      body: { foo: { bar: "123" } },
+      statusCode: 200
     },
     mockName: "success"
   },
   {
     url: "/hello/world",
     httpMethod: "get",
-    statusCode: 501,
-    error: "not implemented!",
+    mock: {
+      statusCode: 501,
+      error: "not implemented!"
+    },
     mockName: "fail"
   }
 ];
@@ -44,6 +48,8 @@ describe("ApiGenerator", () => {
     const generator = new ApiGenerator();
     const fileDeclaration = await generator.generate(snapshots);
 
-    expect(fileDeclaration._compilerNode.text).toMatchSnapshot("[API] [generator]")
+    expect(fileDeclaration._compilerNode.text).toMatchSnapshot(
+      "[API] [generator]"
+    );
   });
 });

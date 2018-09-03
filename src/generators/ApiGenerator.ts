@@ -1,10 +1,8 @@
 import Project, { CodeBlockWriter, SourceFile } from "ts-simple-ast";
-import fs from "fs";
-const util = require("util");
+import util from "util";
 
 import { MockGenerator } from "../GeneratorRunner";
 
-const mockFileName = "API.ts";
 const methodParameter = "url";
 
 export class ApiGenerator implements MockGenerator {
@@ -59,10 +57,11 @@ export class ApiGenerator implements MockGenerator {
       this.addToObj(parsed, snapshot.httpMethod, methodContent =>
         this.addToObj(methodContent, snapshot.url, urlContent =>
           this.addToObj(urlContent, snapshot.mockName, mockContent => {
-            if (snapshot.body) mockContent["body"] = snapshot.body;
-            if (snapshot.error) mockContent["error"] = snapshot.error;
-            if (snapshot.statusCode)
-              mockContent["statusCode"] = snapshot.statusCode;
+            const { mock } = snapshot;
+            if (mock.body) mockContent["body"] = mock.body;
+            if (mock.error) mockContent["error"] = mock.error;
+            if (mock.statusCode)
+              mockContent["statusCode"] = mock.statusCode;
           })
         )
       );
