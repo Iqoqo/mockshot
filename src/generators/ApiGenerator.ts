@@ -8,21 +8,24 @@ const methodParameter = "url";
 export class ApiGenerator {
   private project: Project;
 
-  constructor(outDir = "dist/mocks") {
-    this.project = new Project({
-      compilerOptions: { outDir, declaration: true }
-    });
+  constructor(readonly outDir = "dist/") {
+    this.project = new Project();
   }
+
+  private async createSourceFile() {
+    try {
+      await fs.unlinkSync(this.outDir + mockFileName);
+      console.log("File exists", mockFileName, "removing...");
+    } catch (ex) { }
+
+    return this.project.createSourceFile(this.outDir + mockFileName)
+  }
+
 
   async generate(snapshot) {
     const parsed = this.parse(snapshot)
 
-    try {
-      await fs.unlinkSync(mockFileName);
-      console.log("File exists", mockFileName, "removing...");
-    } catch (ex) { }
-
-    const fileDeclaration = this.project.createSourceFile(mockFileName)
+    const fileDeclaration = await this.createSourceFile()
 
     fileDeclaration
       .addClass({ name: "API" })
@@ -37,6 +40,8 @@ export class ApiGenerator {
     fileDeclaration.addInterfaces(this.getInterfacesFrom(parsed))
 
     await this.project.save();
+
+    return fileDeclaration
   }
 
   private getMethodsFrom(parsed) {

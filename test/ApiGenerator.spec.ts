@@ -1,10 +1,4 @@
 import { ApiGenerator } from "../src/generators/ApiGenerator";
-import { API as API2 } from "../API";
-const util = require('util')
-
-
-// API2.get("/hello/world").
-// API2.post("/hello/world").success
 
 const snapshot = [
   {
@@ -47,20 +41,9 @@ const snapshot = [
 
 describe("ApiGenerator", () => {
   it("should generate API endpoint mock", async () => {
-    const generator = new ApiGenerator(".");
-    await generator.generate(snapshot); \
+    const generator = new ApiGenerator();
+    const fileDeclaration = await generator.generate(snapshot);
+
+    expect(fileDeclaration._compilerNode.text).toMatchSnapshot("[API] [generator]")
   });
 });
-
-export const API = {
-  GET: (url: "/hello/world" | "/bye/world") => {
-    switch (url) {
-      case "/hello/world":
-        return {
-          success: { statusCode: 200, body: { foo: { bar: "123" } } }
-        };
-      case "/bye/world":
-        return { statusCode: 501, error: "not implemented" };
-    }
-  }
-};
