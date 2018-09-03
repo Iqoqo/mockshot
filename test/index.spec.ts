@@ -40,21 +40,7 @@ describe("toMatchMock", () => {
   });
 
   it.only("Should match api mock shape", () => {
-    /*const res = axios.post(WebPath.login, data: {userid: "3", password: "4"});
-    expect(res).toMatchAPIMock.POST(url).valid;
-    {
-      body: {
-        token: "jwt xxx"
-      },
-      status: 200,
-      headers: {
-        auth: {
-          token: "asdfasdasd"
-        }
-      }
-    }
-
-    HelloWorld.name, "shape", "success", ["id", "data._id"];*/
+      expect({ some: 'value', id: '1234sddd56', data: { _id: '1234'}}).toMatchMock(HelloWorld.name, "shape", "success", ["id", "data._id"]);
   });
 
   it.skip("Should generate mocks", async done => {

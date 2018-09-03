@@ -2,21 +2,17 @@ import { cloneDeep, get, set } from "lodash";
 import pretty from "json-pretty";
 import { generateMocks } from "./generateMocks";
 
-declare global {
-  namespace jest {
-    // tslint:disable-next-line:interface-name
-    interface Matchers<R> {
-      toMatchAPIMock(mockName: string, ignoredKeyPaths?: string[]): R;
-    }
-  }
-}
-
 export enum HttpMethods {
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
   PATCH = "PATCH",
   DELETE = "DELETE"
+}
+
+export enum RequestModules {
+  request = "request", 
+  axios = "axios"
 }
 
 expect.addSnapshotSerializer({
@@ -48,11 +44,9 @@ afterAll(async () => {
   }
 });
 
-function toMatchAPIMock(
+function toMatchApiMock(
   received,
-  returnValue: string,
-  ignoredKeyPaths?: string[],
-  customMatcher?: any
+  returnValue: string
 ) {
   commonSnapshotState = this.snapshotState;
 
@@ -63,19 +57,6 @@ function toMatchAPIMock(
   );
   const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
-
-  if (ignoredKeyPaths && currentSnapshot) {
-    const parsedSnapshot = JSON.parse(currentSnapshot);
-    received = cloneDeep(received);
-
-    ignoredKeyPaths.forEach(keyPath => {
-      const val = get(parsedSnapshot.mock, keyPath);
-      const target = get(received, keyPath);
-      if (val && target && typeof val === typeof target) {
-        set(received, keyPath, val);
-      }
-    });
-  }
 
   const snapshot = {
     method: received.config.method.toUpperCase(),
@@ -97,6 +78,6 @@ function toMatchAPIMock(
   return { pass };
 }
 
-expect.extend({ toMatchAPIMock });
+expect.extend({ toMatchApiMock });
 
-export { toMatchAPIMock };
+export { toMatchApiMock };
