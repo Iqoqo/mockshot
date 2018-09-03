@@ -75,33 +75,37 @@ async function toMatchApiMock(
       url = res.url;
       mock = { status: res.status, body: res.data }
       break;
-    case RequestModules.fetch:  break;
+    case RequestModules.fetch:
+      method = received.method || "GET" // this doesn't work
+      url = received.url
+      mock = { status: received.status, body: await received.text() }
+      break;
     case RequestModules.request:
     default: break;
   }
 
-const snapshotTag = getSnapshotTag(
-  method, url, returnValue
-);
-const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
-const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
+  const snapshotTag = getSnapshotTag(
+    method, url, returnValue
+  );
+  const snapshotName = getSnapshotName(this.currentTestName, snapshotTag);
+  const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
 
-const snapshot = {
-  method,
-  url,
-  mockName: returnValue,
-  mock
-};
+  const snapshot = {
+    method,
+    url,
+    mockName: returnValue,
+    mock
+  };
 
-const snapshotNameTag = `[${method} ${url} ${returnValue}]`;
+  const snapshotNameTag = `[${method} ${url} ${returnValue}]`;
 
-const result = expect(snapshot).toMatchSnapshot(
-  `[mockshot] [${snapshotNameTag}]`
-);
+  const result = expect(snapshot).toMatchSnapshot(
+    `[mockshot] [${snapshotNameTag}]`
+  );
 
-const pass = result === undefined;
+  const pass = result === undefined;
 
-return { pass };
+  return { pass };
 }
 
 expect.extend({ toMatchApiMock });
