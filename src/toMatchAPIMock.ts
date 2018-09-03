@@ -93,7 +93,7 @@ const snapshot = {
   mock
 };
 
-const snapshotNameTag = `[${received.config.method.toUpperCase()} ${url} ${returnValue}]`;
+const snapshotNameTag = `[${method} ${url} ${returnValue}]`;
 
 const result = expect(snapshot).toMatchSnapshot(
   `[mockshot] [${snapshotNameTag}]`
