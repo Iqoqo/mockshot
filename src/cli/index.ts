@@ -1,6 +1,6 @@
 import { ApiGenerator } from "../generators/ApiGenerator";
 import { GeneratorRunner } from "../GeneratorRunner";
-import { SnapshotFetcher } from "./util";
+import { SnapshotFetcher } from "../SnapshotFetcher";
 
 export async function run(args: string[]) {
   const outputDir = args[0];

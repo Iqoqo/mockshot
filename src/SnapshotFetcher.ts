@@ -5,11 +5,11 @@ import { SnapshotState } from "jest-snapshot";
 export class SnapshotFetcher {
   private static readonly patterns = [
     "*/__snapshots__/*.snap",
-    "!**/.{git,svn,hg}/**",
+    "!**/node_modules/**",
     "!./.{git,svn,hg}/**"
   ];
 
-  static getSnapshots(): object[] {
+  static getSnapshots(): object {
     const snapFiles = SnapshotFetcher.getFilePaths();
     return SnapshotFetcher.getSnapsFromFiles(snapFiles);
   }
@@ -29,13 +29,13 @@ export class SnapshotFetcher {
     return filePaths;
   }
 
-  static getSnapsFromFiles(filePaths: string[]): object[] {
+  static getSnapsFromFiles(filePaths: string[]): object {
     return filePaths
       .map(SnapshotFetcher.getSnapsFromFile)
-      .reduce((acc, cur) => [...acc, ...cur], []);
+      .reduce((acc, cur) => ({ ...acc, ...cur }), {});
   }
 
-  static getSnapsFromFile(filePath: string): object[] {
+  static getSnapsFromFile(filePath: string): object {
     const absolutePath = path.resolve(filePath);
     const state = new SnapshotState(absolutePath, {
       snapshotPath: absolutePath
@@ -45,7 +45,8 @@ export class SnapshotFetcher {
 
     const snaps = keys
       .filter(SnapshotFetcher.isMockshotSnap)
-      .map(key => JSON.parse(state._snapshotData[key]));
+      .reduce((acc, cur) => ({ ...acc, [cur]: state._snapshotData[cur] }), {});
+
     return snaps;
   }
 
