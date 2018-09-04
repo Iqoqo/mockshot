@@ -11,9 +11,22 @@ export enum HttpMethods {
 }
 
 export enum RequestModules {
-  request = "request", 
+  request = "request",
   axios = "axios"
 }
+
+export interface IApiSnapshot {
+  mockName: string;
+  url: string;
+  httpMethod: "post" | "get" | "put" | "delete" | "patch";
+  mock: {
+    statusCode: number;
+    body: any;
+    error?: string;
+  };
+}
+
+export const ApiSnapshotTag = "[APISnap]";
 
 expect.addSnapshotSerializer({
   test: val => val.mock,
@@ -44,10 +57,7 @@ afterAll(async () => {
   }
 });
 
-function toMatchApiMock(
-  received,
-  returnValue: string
-) {
+function toMatchApiMock(received, returnValue: string) {
   commonSnapshotState = this.snapshotState;
 
   const snapshotTag = getSnapshotTag(
@@ -70,7 +80,7 @@ function toMatchApiMock(
   } ${returnValue}]`;
 
   const result = expect(snapshot).toMatchSnapshot(
-    `[mockshot] [APISnap] [${snapshotNameTag}]`
+    `[mockshot] ${ApiSnapshotTag} [${snapshotNameTag}]`
   );
 
   const pass = result === undefined;

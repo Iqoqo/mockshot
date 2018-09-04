@@ -1,11 +1,12 @@
-import Project, { CodeBlockWriter, SourceFile } from "ts-simple-ast";
+import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
 
-import { MockGenerator } from "../GeneratorRunner";
+import { MockGenerator } from "./base";
+import { ApiSnapshotTag, IApiSnapshot } from "../matchers/toMatchAPIMock";
 
 const methodParameter = "url";
 
-export class ApiGenerator implements MockGenerator {
+export class ApiGenerator extends MockGenerator {
   getFilename() {
     return "API.ts";
   }
@@ -68,13 +69,13 @@ export class ApiGenerator implements MockGenerator {
     return parsed;
   }
 
-  private filterSnapshots(snapshots: object): object[] {
+  private filterSnapshots(snapshots: object): IApiSnapshot[] {
     const keys = Object.keys(snapshots);
     return keys.filter(this.isAPISnap).map(key => snapshots[key]);
   }
 
   private isAPISnap(key: string): boolean {
-    return key.indexOf("[APISnap]") !== -1;
+    return key.indexOf(ApiSnapshotTag) !== -1;
   }
 
   private addToObj(obj, name, cb) {

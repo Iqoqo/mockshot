@@ -1,5 +1,7 @@
-import Project, { CodeBlockWriter, SourceFile } from "ts-simple-ast";
+import Project from "ts-simple-ast";
 import fs from "fs";
+
+import { MockGenerator } from "./generators/base";
 
 export class GeneratorRunner {
   private project: Project;
@@ -21,7 +23,7 @@ export class GeneratorRunner {
     const fileName = generator.getFilename();
     const fileDeclaration = this.createSourceFile(fileName);
     generator.generate(fileDeclaration, this.snapshots);
-  }
+  };
 
   private createSourceFile = (mockFileName: string) => {
     try {
@@ -29,10 +31,5 @@ export class GeneratorRunner {
       console.log("File exists", mockFileName, "removing...");
     } catch (ex) {}
     return this.project.createSourceFile(this.outDir + mockFileName);
-  }
-}
-
-export interface MockGenerator {
-  generate: (fileDeclaration: SourceFile, snapshots: object) => void;
-  getFilename: () => string;
+  };
 }
