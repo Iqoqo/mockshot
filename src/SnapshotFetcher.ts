@@ -45,7 +45,7 @@ export class SnapshotFetcher {
 
     const snaps = keys
       .filter(SnapshotFetcher.isMockshotSnap)
-      .reduce((acc, cur) => ({ ...acc, cur: state._snapshotData[cur] }), {});
+      .reduce((acc, cur) => ({ ...acc, [cur]: state._snapshotData[cur] }), {});
 
     return snaps;
   }

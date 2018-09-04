@@ -1,5 +1,6 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
+import uniqBy from "lodash/uniqBy";
 
 import { MockGenerator } from "./base";
 import { ApiSnapshotTag, IApiSnapshot } from "../matchers/toMatchAPIMock";
@@ -52,21 +53,39 @@ export class ApiGenerator extends MockGenerator {
     }));
   }
 
+  private parsed = {};
+
   private parse(snapshots: object) {
-    const parsed = {};
-    this.filterSnapshots(snapshots).map(snapshot => {
-      this.addToObj(parsed, snapshot.httpMethod, methodContent =>
-        this.addToObj(methodContent, snapshot.url, urlContent =>
-          this.addToObj(urlContent, snapshot.mockName, mockContent => {
-            const { mock } = snapshot;
-            if (mock.body) mockContent["body"] = mock.body;
-            if (mock.error) mockContent["error"] = mock.error;
-            if (mock.statusCode) mockContent["statusCode"] = mock.statusCode;
-          })
-        )
-      );
-    });
-    return parsed;
+    const x = {
+      get: {
+        "/hello": { success: "", fail: "" },
+        "/world": { success: "", fail: "" }
+      },
+      post: "",
+      put: ""
+    };
+
+    const filtered = this.filterSnapshots(snapshots);
+    const httpMethods = uniqBy(
+      snapshots,
+      (snap: IApiSnapshot) => snap.httpMethod
+    ).reduce((acc, cur) => ({ ...acc, [cur]: {} }), {});
+
+    filtered.map(this.forEachSnap);
+    return this.parsed;
+  }
+
+  private forEachSnap(snapshot: IApiSnapshot) {
+    this.addToObj(this.parsed, snapshot.httpMethod, methodContent =>
+      this.addToObj(methodContent, snapshot.url, urlContent =>
+        this.addToObj(urlContent, snapshot.mockName, mockContent => {
+          const { mock } = snapshot;
+          if (mock.body) mockContent["body"] = mock.body;
+          if (mock.error) mockContent["error"] = mock.error;
+          if (mock.statusCode) mockContent["statusCode"] = mock.statusCode;
+        })
+      )
+    );
   }
 
   private filterSnapshots(snapshots: object): IApiSnapshot[] {
