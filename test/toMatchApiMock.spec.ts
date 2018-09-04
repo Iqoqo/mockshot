@@ -11,11 +11,6 @@ describe("toMatchApiMock()", () => {
     expect(res).toMatchApiMock("axios-success");
   });
 
-  it("Should be rewritten (the test)", async () => {
-    const res = await axios.get(testUrl, { adapter });
-    expect(res).toMatchApiMock("axios-failure");
-  });
-
   it("Should work with r2 module", async () => {
     const res = await r2.get(testUrl);
     await expect(res).toMatchApiMock("r2-success");
