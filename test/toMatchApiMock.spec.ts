@@ -31,6 +31,6 @@ describe("toMatchApiMock()", () => {
       statttus: 200,
       my_url: testUrl
     };
-    await expect(res).toMatchApiMock("failure-unsupported-response");
+    await expect(res).not.toMatchApiMock("failure-unsupported-response");
   });
 });
