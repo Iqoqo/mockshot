@@ -1,9 +1,9 @@
-import { Project } from "ts-simple-ast";
+import Project from "ts-simple-ast";
 import { ApiGenerator } from "../src/generators/ApiGenerator";
-import { IApiSnapshot } from "../src/matchers/toMatchAPIMock";
+import { IApiSnapshot, ApiSnapshotTag } from "../src/matchers/toMatchAPIMock";
 
-const snapshots = [
-  {
+const snapshots = {
+  [`${ApiSnapshotTag} 1`]: {
     url: "/hello/world",
     httpMethod: "post",
     mock: {
@@ -16,7 +16,7 @@ const snapshots = [
     },
     mockName: "success"
   },
-  {
+  [`${ApiSnapshotTag} 2`]: {
     url: "/hello/world",
     httpMethod: "post",
     mock: {
@@ -25,7 +25,7 @@ const snapshots = [
     },
     mockName: "fail"
   },
-  {
+  [`${ApiSnapshotTag} 3`]: {
     url: "/bye/world",
     httpMethod: "get",
     mock: {
@@ -34,7 +34,7 @@ const snapshots = [
     },
     mockName: "success"
   },
-  {
+  [`${ApiSnapshotTag} 4`]: {
     url: "/hello/world",
     httpMethod: "get",
     mock: {
@@ -43,7 +43,7 @@ const snapshots = [
     },
     mockName: "fail"
   }
-] as IApiSnapshot[];
+} as { [key: string]: IApiSnapshot };
 
 describe("ApiGenerator", () => {
   it("should generate API endpoint mock", async () => {
