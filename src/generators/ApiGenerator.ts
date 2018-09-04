@@ -46,7 +46,7 @@ export class ApiGenerator extends MockGenerator {
       isExported: true,
       properties: Object.keys(parsed[method]).map(url => {
         const types = Object.keys(parsed[method][url])
-          .map(type => `${type}: any`)
+          .map(type => `"${type}": any`)
           .join();
         return { name: `"${url}"`, type: `{${types}}` };
       })

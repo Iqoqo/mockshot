@@ -1,2 +1,12 @@
-import { generateMocks } from './generateMocks';
-generateMocks();
+import { ApiGenerator } from "./generators/ApiGenerator";
+import { GeneratorRunner } from "./GeneratorRunner";
+import { SnapshotFetcher } from "./SnapshotFetcher";
+
+export async function run(outputDir: string) {
+  const snapshots = SnapshotFetcher.getSnapshots();
+
+  const generators = [new ApiGenerator()];
+
+  const generatorRunner = new GeneratorRunner(outputDir, generators, snapshots);
+  await generatorRunner.run();
+}
