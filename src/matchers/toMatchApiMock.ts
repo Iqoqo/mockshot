@@ -60,7 +60,12 @@ async function parse(response): Promise<IApiSnapBase> {
 }
 
 export async function toMatchApiMock(response, mockName: string) {
-  const parsedResponse = await parse(response);
+  let parsedResponse;
+  try {
+    parsedResponse = await parse(response);
+  } catch (err) {
+    return { pass: false, message: () => err.message };
+  }
 
   const snapshot: IApiSnapshot = { mockName, ...parsedResponse };
   const snapshotNameTag = `${parsedResponse.httpMethod} ${
@@ -78,9 +83,7 @@ declare global {
   namespace jest {
     // tslint:disable-next-line:interface-name
     interface Matchers<R> {
-      toMatchApiMock(
-        mockName: string,
-      ): R;
+      toMatchApiMock(mockName: string): R;
     }
   }
 }
