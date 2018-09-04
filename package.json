@@ -27,20 +27,32 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
     "collectCoverage": false,
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/", "/dist/"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/",
+      "/dist/"
+    ]
   },
   "devDependencies": {
-    "@types/node": "10.3.1",
     "@types/jest": "^23.3.1",
-    "prettier": "1.11.1",
-    "rimraf": "2.6.2",
-    "typescript": "2.7.2",
+    "@types/lodash": "^4.14.116",
+    "@types/node": "10.3.1",
     "axios": "^0.18.0",
     "fetch": "^1.1.0",
+    "prettier": "1.11.1",
     "r2": "^2.0.1",
-    "request-promise-native": "^1.0.5"
+    "request-promise-native": "^1.0.5",
+    "rimraf": "2.6.2",
+    "typescript": "2.7.2"
   },
   "dependencies": {
     "glob": "^7.1.3",

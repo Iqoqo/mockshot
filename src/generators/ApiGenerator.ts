@@ -1,6 +1,6 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
-import * as _ from "lodash";
+import _ from "lodash";
 
 import { MockGenerator } from "./base";
 import { ApiSnapshotTag, IApiSnapshot } from "../matchers/toMatchAPIMock";
@@ -59,7 +59,7 @@ export class ApiGenerator extends MockGenerator {
     const apiSnapKeys = this.getRelevantKeys(snapshots);
 
     apiSnapKeys.forEach(key => {
-      const snap = snapshots[key];
+      const snap: IApiSnapshot = snapshots[key];
       if (!this.isHttpMethodValid(snap.httpMethod)) {
         throw Error(
           `Invalid http method '${snap.httpMethod}' in snapshot '${key}'`

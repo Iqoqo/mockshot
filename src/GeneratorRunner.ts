@@ -17,6 +17,7 @@ export class GeneratorRunner {
   async run() {
     this.generators.forEach(this.runGenerator);
     await this.project.save();
+    await this.project.emit();
   }
 
   private runGenerator = (generator: MockGenerator) => {
