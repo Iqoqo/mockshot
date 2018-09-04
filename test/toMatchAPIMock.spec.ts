@@ -1,9 +1,9 @@
-import "../src/toMatchApiMock";
+import "../src/matchers/toMatchApiMock";
 import axios from "axios";
 import r2 from "r2";
 const adapter = require("axios/lib/adapters/http");
 
-const testUrl = "http://www.example.com"
+const testUrl = "http://www.example.com";
 
 describe("toMatchApiMock()", () => {
   it("Should work with axios module", async () => {
@@ -28,9 +28,9 @@ describe("toMatchApiMock()", () => {
 
   it("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
     const res = {
-      statttus: 200, my_url: testUrl
-    }
+      statttus: 200,
+      my_url: testUrl
+    };
     await expect(res).toMatchApiMock("failure-unsupported-response");
   });
-
 });
