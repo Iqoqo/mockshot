@@ -118,44 +118,46 @@ describe("ApiGenerator", () => {
     generator = new ApiGenerator();
   });
 
-  it("should throw if snapshot is missing mockName", async () => {
-    expect(
-      await generator.generate(fileDeclaration, snapshotsMissingName)
+  it("Should throw if snapshot is missing mockName", () => {
+    expect(() =>
+      generator.generate(fileDeclaration, snapshotsMissingName)
     ).toThrowError();
   });
 
-  it("should throw if snapshot is missing url", async () => {
-    expect(
-      await generator.generate(fileDeclaration, snapshotsMissingUrl)
-    ).toThrowError();
+  it("Should throw if snapshot is missing url", () => {
+    expect(() =>
+      generator.generate(fileDeclaration, snapshotsMissingUrl)
+    ).toThrowError("Missing property url in snapshot '[APISnap] 5'");
   });
 
-  it("should throw if snapshot has invalid HTTP method", async () => {
-    expect(
-      await generator.generate(fileDeclaration, snapshotsInvalidMethod)
-    ).toThrowError();
+  it("Should throw if snapshot has invalid HTTP method", () => {
+    expect(() =>
+      generator.generate(fileDeclaration, snapshotsInvalidMethod)
+    ).toThrowError("Invalid http method 'take' in snapshot '[APISnap] 5'");
   });
 
-  it("should throw if snapshot is missing status code", async () => {
-    expect(
-      await generator.generate(fileDeclaration, snapshotsMissingStatus)
-    ).toThrowError();
+  it("Should throw if snapshot is missing status code", () => {
+    expect(() =>
+      generator.generate(fileDeclaration, snapshotsMissingStatus)
+    ).toThrowError("Missing property statusCode in snapshot '[APISnap] 5'");
   });
 
-  it("should throw if snapshot is missing mock property", async () => {
-    expect(
-      await generator.generate(fileDeclaration, snapshotsMissingMock)
-    ).toThrowError();
+  it("Should throw if snapshot is missing mock property", () => {
+    expect(() =>
+      generator.generate(fileDeclaration, snapshotsMissingMock)
+    ).toThrowError("Missing property mock in snapshot '[APISnap] 5'");
   });
 
-  it("should throw if snapshot has duplicate mocks", async () => {
-    expect(
-      await generator.generate(fileDeclaration, snapshotsDuplication)
-    ).toThrowError();
+  it("Should throw if snapshot has duplicate mocks", () => {
+    expect(() =>
+      generator.generate(fileDeclaration, snapshotsDuplication)
+    ).toThrowError(
+      "Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '[APISnap] dup'"
+    );
   });
 
-  it("should generate API endpoint mock", async () => {
-    await generator.generate(fileDeclaration, snapshots);
+  it("Should generate API endpoint mock", () => {
+    generator.generate(fileDeclaration, snapshots);
 
     expect(fileDeclaration._compilerNode.text).toMatchSnapshot(
       "[API] [generator]"

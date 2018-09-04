@@ -1,6 +1,6 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
-import uniqBy from "lodash/uniqBy";
+import * as _ from "lodash";
 
 import { MockGenerator } from "./base";
 import { ApiSnapshotTag, IApiSnapshot } from "../matchers/toMatchAPIMock";
@@ -12,7 +12,7 @@ export class ApiGenerator extends MockGenerator {
     return "API.ts";
   }
 
-  async generate(fileDeclaration: SourceFile, snapshots: object) {
+  generate(fileDeclaration: SourceFile, snapshots: object) {
     const parsed = this.parse(snapshots);
 
     fileDeclaration
@@ -56,54 +56,57 @@ export class ApiGenerator extends MockGenerator {
   private parsed = {};
 
   private parse(snapshots: object) {
-    const x = {
-      get: {
-        "/hello": { success: "", fail: "" },
-        "/world": { success: "", fail: "" }
-      },
-      post: "",
-      put: ""
-    };
+    const apiSnapKeys = this.getRelevantKeys(snapshots);
 
-    const filtered = this.filterSnapshots(snapshots);
-    const httpMethods = uniqBy(
-      snapshots,
-      (snap: IApiSnapshot) => snap.httpMethod
-    ).reduce((acc, cur) => ({ ...acc, [cur]: {} }), {});
+    apiSnapKeys.forEach(key => {
+      const snap = snapshots[key];
+      if (!this.isHttpMethodValid(snap.httpMethod)) {
+        throw Error(
+          `Invalid http method '${snap.httpMethod}' in snapshot '${key}'`
+        );
+      }
+      if (!_.has(this.parsed, snap.httpMethod)) {
+        this.parsed[snap.httpMethod] = {};
+      }
 
-    filtered.map(this.forEachSnap);
+      if (!snap.url) {
+        throw Error(`Missing property url in snapshot '${key}'`);
+      }
+      if (!_.has(this.parsed[snap.httpMethod], snap.url)) {
+        this.parsed[snap.httpMethod][snap.url] = {};
+      }
+
+      if (!snap.mockName) {
+        throw Error(`Missing property mockName in snapshot '${key}'`);
+      }
+      if (!snap.mock) {
+        throw Error(`Missing property mock in snapshot '${key}'`);
+      }
+      if (!snap.mock.statusCode) {
+        throw Error(`Missing property statusCode in snapshot '${key}'`);
+      }
+      if (_.has(this.parsed[snap.httpMethod][snap.url], snap.mockName)) {
+        throw Error(
+          `Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '${key}'`
+        );
+      }
+      this.parsed[snap.httpMethod][snap.url][snap.mockName] = snap.mock;
+    });
+
     return this.parsed;
   }
 
-  private forEachSnap(snapshot: IApiSnapshot) {
-    this.addToObj(this.parsed, snapshot.httpMethod, methodContent =>
-      this.addToObj(methodContent, snapshot.url, urlContent =>
-        this.addToObj(urlContent, snapshot.mockName, mockContent => {
-          const { mock } = snapshot;
-          if (mock.body) mockContent["body"] = mock.body;
-          if (mock.error) mockContent["error"] = mock.error;
-          if (mock.statusCode) mockContent["statusCode"] = mock.statusCode;
-        })
-      )
-    );
+  private isHttpMethodValid(method: string): boolean {
+    return _.includes(["post", "get", "put", "delete", "patch"], method);
   }
 
-  private filterSnapshots(snapshots: object): IApiSnapshot[] {
+  private getRelevantKeys(snapshots: object): string[] {
     const keys = Object.keys(snapshots);
-    return keys.filter(this.isAPISnap).map(key => snapshots[key]);
+    return keys.filter(this.isAPISnap);
   }
 
   private isAPISnap(key: string): boolean {
     return key.indexOf(ApiSnapshotTag) !== -1;
-  }
-
-  private addToObj(obj, name, cb) {
-    const subObj = obj[name] || {};
-
-    cb(subObj);
-
-    obj[name] = subObj;
-    return obj;
   }
 
   private getSwitchStatement(methodParameter: string, options: object) {
