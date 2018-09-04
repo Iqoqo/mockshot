@@ -1,12 +1,18 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import pretty from "json-pretty";
+import _ from "lodash";
 import { MockGenerator } from "./base";
+import { ClassSnapshotTag } from "../matchers/toMatchMock";
 
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};
 
   getFilename() {
     return "ClassMocks.ts";
+  }
+
+  filterSnapKeys(keys: string[]): string[] {
+    return keys.filter(key => _.includes(key, ClassSnapshotTag));
   }
 
   generate(fileDecleration: SourceFile, snapshots: object) {
@@ -67,8 +73,7 @@ export class ClassGenerator extends MockGenerator {
     });
   }
 
-  private parseSingleMock(snap) {
-    const snapshot = JSON.parse(snap);
+  private parseSingleMock(snapshot) {
     let classDef = this.mockDef[snapshot.className];
 
     if (!classDef) {

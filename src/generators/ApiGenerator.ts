@@ -12,6 +12,10 @@ export class ApiGenerator extends MockGenerator {
     return "API.ts";
   }
 
+  filterSnapKeys(keys: string[]): string[] {
+    return keys.filter(key => _.includes(key, ApiSnapshotTag));
+  }
+
   generate(fileDeclaration: SourceFile, snapshots: object) {
     const parsed = this.parse(snapshots);
 
@@ -56,9 +60,8 @@ export class ApiGenerator extends MockGenerator {
   private parsed = {};
 
   private parse(snapshots: object) {
-    const apiSnapKeys = this.getRelevantKeys(snapshots);
-
-    apiSnapKeys.forEach(key => {
+    const keys = _.keys(snapshots);
+    keys.forEach(key => {
       const snap: IApiSnapshot = snapshots[key];
       if (!this.isHttpMethodValid(snap.httpMethod)) {
         throw Error(
@@ -98,15 +101,6 @@ export class ApiGenerator extends MockGenerator {
 
   private isHttpMethodValid(method: string): boolean {
     return _.includes(["post", "get", "put", "delete", "patch"], method);
-  }
-
-  private getRelevantKeys(snapshots: object): string[] {
-    const keys = Object.keys(snapshots);
-    return keys.filter(this.isAPISnap);
-  }
-
-  private isAPISnap(key: string): boolean {
-    return key.indexOf(ApiSnapshotTag) !== -1;
   }
 
   private getSwitchStatement(methodParameter: string, options: object) {
