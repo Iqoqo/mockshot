@@ -8,11 +8,11 @@ Mockshot is a mocking framework which generates mocks from your snapshot tests.
 - [Usage](#usage)
   - [Class mock](#class-mocks)
   - [Endpoints api mock](#endpoint-api-mocks)
-- [Restrictions](#restrictions)
-
+- [Restrictions](#restrictions)  
+  
+  
 ## <a name=introduction>Introduction
-Mockshot is a framework that generates mocks from all the snapshot tests of your project.
-
+Mockshot is a framework that generates mocks from all the snapshot tests of your project.  
 With the usage of this library, you'll be able to test your code by generating mocks of classes and endpoints, thus making each test seperated from its internal methods.
 
 
