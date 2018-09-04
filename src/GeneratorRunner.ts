@@ -7,7 +7,7 @@ export class GeneratorRunner {
   constructor(
     private outDir: string,
     private generators: MockGenerator[],
-    private snapshots: object[]
+    private snapshots: object
   ) {
     this.project = new Project();
   }
@@ -33,6 +33,6 @@ export class GeneratorRunner {
 }
 
 export interface MockGenerator {
-  generate: (fileDeclaration: SourceFile, snapshots: object[]) => void;
+  generate: (fileDeclaration: SourceFile, snapshots: object) => void;
   getFilename: () => string;
 }

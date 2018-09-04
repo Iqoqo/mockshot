@@ -1,4 +1,5 @@
 import { ApiGenerator } from "../src/generators/ApiGenerator";
+import { Project } from "ts-simple-ast";
 
 const snapshots = [
   {
@@ -46,7 +47,10 @@ const snapshots = [
 describe("ApiGenerator", () => {
   it("should generate API endpoint mock", async () => {
     const generator = new ApiGenerator();
-    const fileDeclaration = await generator.generate(snapshots);
+    const project = new Project()
+    const fileDeclaration = project.createSourceFile('api');
+    await generator.generate(fileDeclaration, snapshots)
+    // const fileDeclaration = await generator.generate(snapshots);
 
     expect(fileDeclaration._compilerNode.text).toMatchSnapshot(
       "[API] [generator]"

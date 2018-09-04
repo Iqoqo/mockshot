@@ -10,7 +10,7 @@ export class ApiGenerator implements MockGenerator {
     return "API.ts";
   }
 
-  async generate(fileDeclaration: SourceFile, snapshots: object[]) {
+  async generate(fileDeclaration: SourceFile, snapshots: object) {
     const parsed = this.parse(snapshots);
 
     fileDeclaration
@@ -51,22 +51,30 @@ export class ApiGenerator implements MockGenerator {
     }));
   }
 
-  private parse(snapshots) {
+  private parse(snapshots: object) {
     const parsed = {};
-    snapshots.map(snapshot => {
+    this.filterSnapshots(snapshots).map(snapshot => {
       this.addToObj(parsed, snapshot.httpMethod, methodContent =>
         this.addToObj(methodContent, snapshot.url, urlContent =>
           this.addToObj(urlContent, snapshot.mockName, mockContent => {
             const { mock } = snapshot;
             if (mock.body) mockContent["body"] = mock.body;
             if (mock.error) mockContent["error"] = mock.error;
-            if (mock.statusCode)
-              mockContent["statusCode"] = mock.statusCode;
+            if (mock.statusCode) mockContent["statusCode"] = mock.statusCode;
           })
         )
       );
     });
     return parsed;
+  }
+
+  private filterSnapshots(snapshots: object): object[] {
+    const keys = Object.keys(snapshots);
+    return keys.filter(this.isAPISnap).map(key => snapshots[key]);
+  }
+
+  private isAPISnap(key: string): boolean {
+    return key.indexOf("[APISnap]") !== -1;
   }
 
   private addToObj(obj, name, cb) {
