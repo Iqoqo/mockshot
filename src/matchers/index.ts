@@ -1,4 +1,3 @@
-import { get, set } from "lodash";
 import pretty from "json-pretty";
 import ApiMockMatcher from "./ApiMockMatcher";
 import ClassMockMatcher from "./ClassMockMatcher";

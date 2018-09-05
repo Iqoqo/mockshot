@@ -2,7 +2,7 @@ import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import pretty from "json-pretty";
 import _ from "lodash";
 import { MockGenerator } from "./base";
-import { ClassSnapshotTag } from "../matchers/toMatchMock";
+import { ClassSnapshotTag } from "../matchers";
 
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};
@@ -93,9 +93,9 @@ export class ClassGenerator extends MockGenerator {
     } else {
       throw Error(
         "Duplicate mock name for method " +
-          snapshot.methodName +
-          ": " +
-          snapshot.mockName
+        snapshot.methodName +
+        ": " +
+        snapshot.mockName
       );
     }
   }

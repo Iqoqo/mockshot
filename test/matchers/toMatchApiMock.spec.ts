@@ -1,4 +1,4 @@
-import "../src/matchers";
+import "../../src/matchers";
 import axios from "axios";
 import r2 from "r2";
 const adapter = require("axios/lib/adapters/http");

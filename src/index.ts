@@ -1,2 +1,3 @@
-export * from './matchers'
-export { generateMocks } from './generateMocks';
+export * from "./matchers";
+export * from "./generators";
+export { run } from "./run";
