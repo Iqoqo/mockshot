@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toMatchMock Should match a default parameter: [mockshot] [[HelloWorld foo default-param]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "foo",
+  "mock": "unknown",
+  "mockName": "default-param"
+}
+`;
+
+exports[`toMatchMock Should match mock with ignoredKeyPaths: [mockshot] [[HelloWorld bar success]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "bar",
+  "mock": {
+    "data": {
+      "_id": "1234567"
+    },
+    "id": "1234567",
+    "some": "value"
+  },
+  "mockName": "success"
+}
+`;
+
+exports[`toMatchMock Should return correct schema: [mockshot] [[HelloWorld foo success]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "foo",
+  "mock": {
+    "foo": "barr"
+  },
+  "mockName": "success"
+}
+`;
