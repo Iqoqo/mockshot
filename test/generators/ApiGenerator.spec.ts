@@ -1,6 +1,6 @@
 import Project, { SourceFile } from "ts-simple-ast";
-import { ApiGenerator } from "../../src/generators/ApiGenerator";
-import { IApiSnapshot, ApiSnapshotTag } from "../../src/matchers/toMatchAPIMock";
+import { ApiGenerator } from "../../src/generators";
+import { IApiSnapshot, ApiSnapshotTag } from "../../src/matchers";
 
 const snapshots = {
   [`${ApiSnapshotTag} 1`]: {
