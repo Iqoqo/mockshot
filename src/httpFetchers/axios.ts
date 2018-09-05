@@ -1,3 +1,8 @@
+class AxiosResponse extends BaseHttpFetcher {
+  isValid(): boolean {
+    return true;
+  }
+}
 interface Axios {
   response: {
     config: {
@@ -10,5 +15,9 @@ interface Axios {
 }
 
 function instanceOfA(fetchLibrary: any): fetchLibrary is Axios {
-  return "response" in object && "response.config" in object && ;
+  return (
+    "response" in object &&
+    "response.config" in object &&
+    response.config.method
+  );
 }
