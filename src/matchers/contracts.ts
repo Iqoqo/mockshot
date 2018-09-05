@@ -12,3 +12,4 @@ export interface IApiSnapshot extends IApiSnapBase {
 }
 
 export const ApiSnapshotTag = "[APISnap]";
+export const ClassSnapshotTag = "[ClassSnap]";

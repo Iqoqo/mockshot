@@ -1,4 +1,6 @@
 import { get, set } from "lodash";
+import { ClassSnapshotTag } from "./contracts"
+
 
 export default class ClassMockMatcher {
 
@@ -9,7 +11,7 @@ export default class ClassMockMatcher {
         mockName: string,
         ignoredKeyPaths?: string[]
     ) {
-        const snapshotTag = `[mockshot] [[${className} ${methodName} ${mockName}]]`;
+        const snapshotTag = `[mockshot] ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
         const snapshotName = `${this.currentTestName}: ${snapshotTag} 1`;
         const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
 

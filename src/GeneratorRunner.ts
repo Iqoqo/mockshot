@@ -17,12 +17,13 @@ export class GeneratorRunner {
   async run() {
     this.generators.forEach(this.runGenerator);
     await this.project.save();
+    await this.project.emit();
   }
 
   private runGenerator = (generator: MockGenerator) => {
     const fileName = generator.getFilename();
     const fileDeclaration = this.createSourceFile(fileName);
-    generator.generate(fileDeclaration, this.snapshots);
+    generator.doGenerate(fileDeclaration, this.snapshots);
   };
 
   private createSourceFile = (mockFileName: string) => {
