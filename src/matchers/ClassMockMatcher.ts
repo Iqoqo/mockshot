@@ -28,11 +28,8 @@ export default class ClassMockMatcher {
         }
 
         const snapshot = { className, methodName, mockName, mock };
-        const snapshotNameTag = `[${className} ${methodName} ${mockName}]`;
 
-        const result = expect(snapshot).toMatchSnapshot(
-            `[mockshot] [${snapshotNameTag}]`
-        );
+        const result = expect(snapshot).toMatchSnapshot(snapshotTag);
         const pass = result === undefined;
         return { pass };
     }
