@@ -4,7 +4,7 @@ import { SnapshotState } from "jest-snapshot";
 
 export class SnapshotFetcher {
   private static readonly patterns = [
-    "*/__snapshots__/*.snap",
+    "**/__snapshots__/*.snap",
     "!**/node_modules/**",
     "!./.{git,svn,hg}/**"
   ];
