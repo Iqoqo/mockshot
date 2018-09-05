@@ -11,7 +11,7 @@ export abstract class MockGenerator {
 
   doGenerate(fileDeclaration: SourceFile, snapshots: object): void {
     const keys = this.filterSnapKeys(_.keys(snapshots));
-    const preparedSnaps = _.pick(snapshots, keys);
-    this.generate(fileDeclaration, preparedSnaps);
+    const snaps = _.pick(snapshots, keys);
+    this.generate(fileDeclaration, snaps);
   }
 }

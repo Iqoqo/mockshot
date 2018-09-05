@@ -59,35 +59,42 @@ export class ApiGenerator extends MockGenerator {
 
   private parsed = {};
 
+  private validate(snap, key) {
+    if (!this.isHttpMethodValid(snap.httpMethod)) {
+      throw Error(
+        `Invalid http method '${snap.httpMethod}' in snapshot '${key}'`
+      );
+    }
+    if (!snap.url) {
+      throw Error(`Missing property url in snapshot '${key}'`);
+    }
+    if (!snap.mockName) {
+      throw Error(`Missing property mockName in snapshot '${key}'`);
+    }
+    if (!snap.mock) {
+      throw Error(`Missing property mock in snapshot '${key}'`);
+    }
+    if (!snap.mock.statusCode) {
+      throw Error(`Missing property statusCode in snapshot '${key}'`);
+    }
+  }
+
+  private fillMissingPath(snap) {
+    if (!_.has(this.parsed, snap.httpMethod)) {
+      this.parsed[snap.httpMethod] = {};
+    }
+    if (!_.has(this.parsed[snap.httpMethod], snap.url)) {
+      this.parsed[snap.httpMethod][snap.url] = {};
+    }
+  }
+
   private parse(snapshots: object) {
-    const keys = _.keys(snapshots);
-    keys.forEach(key => {
+    _.keys(snapshots).forEach(key => {
       const snap: IApiSnapshot = snapshots[key];
-      if (!this.isHttpMethodValid(snap.httpMethod)) {
-        throw Error(
-          `Invalid http method '${snap.httpMethod}' in snapshot '${key}'`
-        );
-      }
-      if (!_.has(this.parsed, snap.httpMethod)) {
-        this.parsed[snap.httpMethod] = {};
-      }
 
-      if (!snap.url) {
-        throw Error(`Missing property url in snapshot '${key}'`);
-      }
-      if (!_.has(this.parsed[snap.httpMethod], snap.url)) {
-        this.parsed[snap.httpMethod][snap.url] = {};
-      }
+      this.validate(snap, key)
+      this.fillMissingPath(snap)
 
-      if (!snap.mockName) {
-        throw Error(`Missing property mockName in snapshot '${key}'`);
-      }
-      if (!snap.mock) {
-        throw Error(`Missing property mock in snapshot '${key}'`);
-      }
-      if (!snap.mock.statusCode) {
-        throw Error(`Missing property statusCode in snapshot '${key}'`);
-      }
       if (_.has(this.parsed[snap.httpMethod][snap.url], snap.mockName)) {
         throw Error(
           `Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '${key}'`
