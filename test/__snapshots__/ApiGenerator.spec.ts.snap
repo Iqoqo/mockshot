@@ -21,43 +21,12 @@ exports[`ApiGenerator Should generate API endpoint mock: [API] [generator] 1`] =
 }
 
 export interface postResponses {
-    \\"/hello/world\\": {success: any,fail: any};
+    \\"/hello/world\\": {\\"success\\": any,\\"fail\\": any};
 }
 
 export interface getResponses {
-    \\"/bye/world\\": {success: any};
-    \\"/hello/world\\": {fail: any};
-}
-"
-`;
-
-exports[`ApiGenerator should generate API endpoint mock: [API] [generator] 1`] = `
-"export class API {
-    static post<T extends keyof postResponses>(url: T): postResponses[T] {
-        switch (url) {
-            case \\"/hello/world\\":
-                return { success: { statusCode: 200, body: { foo: { bar: '123' } } },
-                  fail: { statusCode: 501, error: 'not implemented' } }
-        }
-    }
-
-    static get<T extends keyof getResponses>(url: T): getResponses[T] {
-        switch (url) {
-            case \\"/bye/world\\":
-                return { success: { body: { foo: { bar: '123' } }, statusCode: 200 } }
-            case \\"/hello/world\\":
-                return { fail: { statusCode: 501, error: 'not implemented!' } }
-        }
-    }
-}
-
-export interface postResponses {
-    \\"/hello/world\\": {success: any,fail: any};
-}
-
-export interface getResponses {
-    \\"/bye/world\\": {success: any};
-    \\"/hello/world\\": {fail: any};
+    \\"/bye/world\\": {\\"success\\": any};
+    \\"/hello/world\\": {\\"fail\\": any};
 }
 "
 `;
