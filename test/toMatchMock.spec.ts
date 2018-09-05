@@ -1,4 +1,4 @@
-import "../src/matchers/toMatchMock";
+import "../src/matchers";
 
 class HelloWorld {
   bar(mock: "success"): any {

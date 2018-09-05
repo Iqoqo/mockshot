@@ -1,4 +1,4 @@
-import "../src/toMatchMock";
+import "../src/matchers";
 import glob from "glob";
 import path from "path";
 import Project from "ts-simple-ast";
@@ -15,7 +15,7 @@ class HelloWorld {
 }
 
 describe("toMatchMock", () => {
-  beforeAll(() => {});
+  beforeAll(() => { });
 
   it.only("Should return correct schema", () => {
     expect({ foo: "barr" }).toMatchMock(HelloWorld.name, "foo", "success");
@@ -40,7 +40,7 @@ describe("toMatchMock", () => {
   });
 
   it.only("Should match api mock shape", () => {
-      expect({ some: 'value', id: '1234sddd56', data: { _id: '1234'}}).toMatchMock(HelloWorld.name, "shape", "success", ["id", "data._id"]);
+    expect({ some: 'value', id: '1234sddd56', data: { _id: '1234' } }).toMatchMock(HelloWorld.name, "shape", "success", ["id", "data._id"]);
   });
 
   it.skip("Should generate mocks", async done => {
@@ -48,7 +48,7 @@ describe("toMatchMock", () => {
       compilerOptions: { outDir: "dist/mocks", declaration: true }
     });
 
-    glob("**/*.ts.mockshot", async function(er, files) {
+    glob("**/*.ts.mockshot", async function (er, files) {
       // files is an array of filenames.
       // If the `nonull` option is set, and nothing
       // was found, then files is ["**/*.js"]
@@ -85,9 +85,9 @@ describe("toMatchMock", () => {
           } else {
             throw Error(
               "Duplicate mock name for method " +
-                snapshot.methodName +
-                ": " +
-                snapshot.mockName
+              snapshot.methodName +
+              ": " +
+              snapshot.mockName
             );
           }
         });
