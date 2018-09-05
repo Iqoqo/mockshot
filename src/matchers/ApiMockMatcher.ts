@@ -50,14 +50,8 @@ export default class ApiMockMatcher {
         }
 
         const snapshot: IApiSnapshot = { mockName, ...parsedResponse };
-        const snapshotNameTag = `${parsedResponse.httpMethod} ${
-            parsedResponse.url
-            } ${mockName}`;
+        const snapshotTag = `[mockshot] ${ApiSnapshotTag} [${parsedResponse.httpMethod} ${parsedResponse.url} ${mockName}]`;
 
-        const result = expect(snapshot).toMatchSnapshot(
-            `[mockshot] ${ApiSnapshotTag} [${snapshotNameTag}]`
-        );
-
-        return { pass: result === undefined };
+        return { pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag) };
     }
 }

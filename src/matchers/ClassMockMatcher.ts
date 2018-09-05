@@ -1,7 +1,6 @@
 import { get, set } from "lodash";
 import { ClassSnapshotTag } from "./contracts"
 
-
 export default class ClassMockMatcher {
 
     static toMatchMock(
@@ -29,8 +28,6 @@ export default class ClassMockMatcher {
 
         const snapshot = { className, methodName, mockName, mock };
 
-        const result = expect(snapshot).toMatchSnapshot(snapshotTag);
-        const pass = result === undefined;
-        return { pass };
+        return { pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag) };
     }
 }
