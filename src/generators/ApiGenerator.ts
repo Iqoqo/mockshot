@@ -1,6 +1,6 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
-import * as _ from "lodash";
+import _ from "lodash";
 
 import { MockGenerator } from "./base";
 import { ApiSnapshotTag, IApiSnapshot } from "../matchers/toMatchAPIMock";
@@ -10,6 +10,10 @@ const methodParameter = "url";
 export class ApiGenerator extends MockGenerator {
   getFilename() {
     return "API.ts";
+  }
+
+  filterSnapKeys(keys: string[]): string[] {
+    return keys.filter(key => _.includes(key, ApiSnapshotTag));
   }
 
   generate(fileDeclaration: SourceFile, snapshots: object) {
@@ -56,10 +60,9 @@ export class ApiGenerator extends MockGenerator {
   private parsed = {};
 
   private parse(snapshots: object) {
-    const apiSnapKeys = this.getRelevantKeys(snapshots);
-
-    apiSnapKeys.forEach(key => {
-      const snap = snapshots[key];
+    const keys = _.keys(snapshots);
+    keys.forEach(key => {
+      const snap: IApiSnapshot = snapshots[key];
       if (!this.isHttpMethodValid(snap.httpMethod)) {
         throw Error(
           `Invalid http method '${snap.httpMethod}' in snapshot '${key}'`
@@ -98,15 +101,6 @@ export class ApiGenerator extends MockGenerator {
 
   private isHttpMethodValid(method: string): boolean {
     return _.includes(["post", "get", "put", "delete", "patch"], method);
-  }
-
-  private getRelevantKeys(snapshots: object): string[] {
-    const keys = Object.keys(snapshots);
-    return keys.filter(this.isAPISnap);
-  }
-
-  private isAPISnap(key: string): boolean {
-    return key.indexOf(ApiSnapshotTag) !== -1;
   }
 
   private getSwitchStatement(methodParameter: string, options: object) {

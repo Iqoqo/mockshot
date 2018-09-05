@@ -1,6 +1,5 @@
 import { cloneDeep, get, set } from "lodash";
 import pretty from "json-pretty";
-import { generateMocks } from "./generateMocks";
 
 declare global {
   namespace jest {
@@ -15,6 +14,8 @@ declare global {
     }
   }
 }
+
+export const ClassSnapshotTag = "[ClassSnap]";
 
 expect.addSnapshotSerializer({
   test: val => val.mock,
@@ -31,21 +32,12 @@ function getSnapshotTag(
   methodName: string,
   mockName: string
 ) {
-  const snapshotNameTag = `[mockshot] [[${className} ${methodName} ${mockName}]]`;
+  const snapshotNameTag = `[mockshot] ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
 
   return snapshotNameTag;
 }
 
 let commonSnapshotState;
-
-afterAll(async () => {
-  if (
-    commonSnapshotState &&
-    (commonSnapshotState.added > 0 || commonSnapshotState.updated > 0)
-  ) {
-    await generateMocks();
-  }
-});
 
 function toMatchMock(
   received,
