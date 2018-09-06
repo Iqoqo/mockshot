@@ -1,5 +1,6 @@
 import Project from "ts-simple-ast";
 import fs from "fs";
+import path from "path";
 
 import { MockGenerator } from "./generators/base";
 
@@ -28,9 +29,9 @@ export class GeneratorRunner {
 
   private createSourceFile = (mockFileName: string) => {
     try {
-      fs.unlinkSync(this.outDir + mockFileName);
+      fs.unlinkSync(path.join(this.outDir, mockFileName));
       console.log("File exists", mockFileName, "removing...");
     } catch (ex) {}
-    return this.project.createSourceFile(this.outDir + mockFileName);
+    return this.project.createSourceFile(path.join(this.outDir, mockFileName));
   };
 }
