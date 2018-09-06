@@ -21,10 +21,11 @@ expect.addSnapshotSerializer({
     print: val => pretty(val)
 });
 
-const toMatchMock = ClassMockMatcher.toMatchMock
+const toMatchClassMock = ClassMockMatcher.toMatchMock
 const toMatchApiMock = ApiMockMatcher.toMatchApiMock
+const toMatchMock = toMatchClassMock
 
-expect.extend({ toMatchMock, toMatchApiMock });
+expect.extend({ toMatchMock, toMatchClassMock, toMatchApiMock });
 
-export { toMatchMock, toMatchApiMock };
+export { toMatchMock, toMatchClassMock, toMatchApiMock };
 export * from "./contracts"

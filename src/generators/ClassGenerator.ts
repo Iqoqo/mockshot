@@ -16,9 +16,7 @@ export class ClassGenerator extends MockGenerator {
   }
 
   generate(fileDecleration: SourceFile, snapshots: object) {
-    const keys = Object.keys(snapshots);
-
-    keys.forEach(key => this.parseSingleMock(snapshots[key]));
+    Object.keys(snapshots).forEach(key => this.parseSingleMock(snapshots[key]));
 
     const classNames = Object.keys(this.mockDef);
 
