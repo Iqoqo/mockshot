@@ -46,11 +46,6 @@ export class ClassGenerator extends MockGenerator {
         });
         const types = mockTypes.join(" | ");
 
-        classDeclaration.addProperty({
-          isStatic: true,
-          name: methodName
-        });
-
         const method = classDeclaration.addMethod({
           isStatic: true,
           parameters: [{ name: "mock", type: types }],
