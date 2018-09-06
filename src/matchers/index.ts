@@ -1,6 +1,6 @@
 import pretty from "json-pretty";
-import ApiMockMatcher from "./ApiMockMatcher";
-import ClassMockMatcher from "./ClassMockMatcher";
+import { toMatchApiMock } from "./ApiMockMatcher";
+import { toMatchClassMock } from "./ClassMockMatcher";
 
 declare global {
     namespace jest {
@@ -25,8 +25,6 @@ expect.addSnapshotSerializer({
     print: val => pretty(val)
 });
 
-const toMatchClassMock = ClassMockMatcher.toMatchMock
-const toMatchApiMock = ApiMockMatcher.toMatchApiMock
 const toMatchMock = toMatchClassMock
 
 expect.extend({ toMatchMock, toMatchClassMock, toMatchApiMock });
