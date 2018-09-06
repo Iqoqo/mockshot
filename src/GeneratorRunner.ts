@@ -18,7 +18,7 @@ export class GeneratorRunner {
 
   async run() {
     this.generators.forEach(this.runGenerator);
-    await this.project.save();
+    this.project.saveSync();
     await this.project.emit();
   }
 
@@ -33,7 +33,7 @@ export class GeneratorRunner {
     try {
       fs.unlinkSync(path.join(this.outDir, mockFileName));
       console.log("File exists", mockFileName, "removing...");
-    } catch (ex) {}
+    } catch (ex) { }
     return this.project.createSourceFile(path.join(this.outDir, mockFileName));
   };
 }
