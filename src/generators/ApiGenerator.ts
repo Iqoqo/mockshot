@@ -8,16 +8,13 @@ import { ApiSnapshotTag, IApiSnapshot } from "../matchers/contracts";
 const methodParameter = "url";
 
 export class ApiGenerator extends MockGenerator {
-  getFilename() {
-    return "API.ts";
-  }
-
   filterSnapKeys(keys: string[]): string[] {
     return keys.filter(key => _.includes(key, ApiSnapshotTag));
   }
 
-  generate(fileDeclaration: SourceFile, snapshots: object) {
+  generate(getFile: (fileName: string) => SourceFile, snapshots: object) {
     const parsed = this.parse(snapshots);
+    const fileDeclaration = getFile("API.ts");
 
     fileDeclaration
       .addClass({ name: "API" })
@@ -92,8 +89,8 @@ export class ApiGenerator extends MockGenerator {
     _.keys(snapshots).forEach(key => {
       const snap: IApiSnapshot = snapshots[key];
 
-      this.validate(snap, key)
-      this.fillMissingPath(snap)
+      this.validate(snap, key);
+      this.fillMissingPath(snap);
 
       if (_.has(this.parsed[snap.httpMethod][snap.url], snap.mockName)) {
         throw Error(

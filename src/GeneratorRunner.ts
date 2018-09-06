@@ -22,9 +22,7 @@ export class GeneratorRunner {
   }
 
   private runGenerator = (generator: MockGenerator) => {
-    const fileName = generator.getFilename();
-    const fileDeclaration = this.createSourceFile(fileName);
-    generator.doGenerate(fileDeclaration, this.snapshots);
+    generator.doGenerate(this.createSourceFile, this.snapshots);
   };
 
   private createSourceFile = (mockFileName: string) => {

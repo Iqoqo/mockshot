@@ -7,15 +7,20 @@ import { ClassSnapshotTag } from "../matchers/contracts";
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};
 
-  getFilename() {
-    return "ClassMocks.ts";
+  getFileName(snapshotFileName: string, outDir) {
+
+    const fileName = "~/iqoqo-root/packages/some-service/test/__snapshots__/index.snap.ts"
+    const mocksName = "~/iqoqo-root/packages/some-service/test/${outDir}/index.snap.ts"
+    return mocksName
+
+    return outDir
   }
 
   filterSnapKeys(keys: string[]): string[] {
     return keys.filter(key => _.includes(key, ClassSnapshotTag));
   }
 
-  generate(fileDecleration: SourceFile, snapshots: object) {
+  generate(getFile: (fileName: string) => SourceFile, snapshots: object) {
     Object.keys(snapshots).forEach(key => this.parseSingleMock(snapshots[key]));
 
     const classNames = Object.keys(this.mockDef);
@@ -23,7 +28,7 @@ export class ClassGenerator extends MockGenerator {
     classNames.forEach(className => {
       const mockClassName = className + "Mocks";
 
-      const myClassFile = fileDecleration;
+      const myClassFile = getFile("../mocks/");
 
       const classDeclaration = myClassFile.addClass({
         name: mockClassName
