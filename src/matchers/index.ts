@@ -30,4 +30,3 @@ const toMatchMock = toMatchClassMock
 expect.extend({ toMatchMock, toMatchClassMock, toMatchApiMock });
 
 export { toMatchMock, toMatchClassMock, toMatchApiMock };
-export * from "./contracts"

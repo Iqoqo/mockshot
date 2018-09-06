@@ -2,20 +2,29 @@ export interface ISnapshot {
   key: string;
   packageName?: string;
   filePath: string;
-  data: IClassSnapshot | IApiSnapshot;
+  data: any;
 }
-export interface IApiSnapshot extends IApiSnapBase {
+
+export interface IApiSnapshot extends ISnapshot {
+  data: IApiSnapData;
+}
+
+export interface IClassSnapshot extends ISnapshot {
+  data: IClassSnapData;
+}
+
+export interface IApiSnapData extends IApiSnapDataBase {
   mockName: string;
 }
 
-export interface IClassSnapshot {
+export interface IClassSnapData {
   className: string;
   methodName: string;
   mockName: string;
   mock: any;
 }
 
-export interface IApiSnapBase {
+export interface IApiSnapDataBase {
   url: string;
   httpMethod: "post" | "get" | "put" | "delete" | "patch";
   mock: {
