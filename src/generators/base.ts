@@ -1,22 +1,10 @@
 import { SourceFile } from "ts-simple-ast";
 import _ from "lodash";
+import { ISnapshot } from "../contracts";
 
 export abstract class MockGenerator {
   abstract generate(
     getFile: (fileName: string) => SourceFile,
-    snapshots: object
+    snapshots: ISnapshot[]
   ): void;
-
-  filterSnapKeys(snapKeys: string[]): string[] {
-    return snapKeys;
-  }
-
-  doGenerate(
-    getFile: (fileName: string) => SourceFile,
-    snapshots: object
-  ): void {
-    const keys = this.filterSnapKeys(_.keys(snapshots));
-    const snaps = _.pick(snapshots, keys);
-    this.generate(getFile, snaps);
-  }
 }

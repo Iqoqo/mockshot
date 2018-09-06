@@ -1,163 +1,205 @@
 import Project, { SourceFile } from "ts-simple-ast";
 import { ApiGenerator } from "../../src/generators";
 import { IApiSnapshot, ApiSnapshotTag } from "../../src/matchers";
+import { ISnapshot } from "../../src/contracts";
 
-const snapshots = {
-  [`${ApiSnapshotTag} 1`]: {
-    url: "/hello/world",
-    httpMethod: "post",
-    mock: {
-      statusCode: 200,
-      body: {
-        foo: {
-          bar: "123"
+const snapshots: ISnapshot[] = [
+  {
+    key: `${ApiSnapshotTag} 1`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world",
+      httpMethod: "post",
+      mock: {
+        statusCode: 200,
+        body: {
+          foo: {
+            bar: "123"
+          }
         }
-      }
-    },
-    mockName: "success"
+      },
+      mockName: "success"
+    }
   },
-  [`${ApiSnapshotTag} 2`]: {
-    url: "/hello/world",
-    httpMethod: "post",
-    mock: {
-      statusCode: 501,
-      error: "not implemented"
-    },
-    mockName: "fail"
+  {
+    key: `${ApiSnapshotTag} 2`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world",
+      httpMethod: "post",
+      mock: {
+        statusCode: 501,
+        error: "not implemented",
+        body: ""
+      },
+      mockName: "fail"
+    }
   },
-  [`${ApiSnapshotTag} 3`]: {
-    url: "/bye/world",
-    httpMethod: "get",
-    mock: {
-      body: { foo: { bar: "123" } },
-      statusCode: 200
-    },
-    mockName: "success"
+  {
+    key: `${ApiSnapshotTag} 3`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/bye/world",
+      httpMethod: "get",
+      mock: {
+        body: { foo: { bar: "123" } },
+        statusCode: 200
+      },
+      mockName: "success"
+    }
   },
-  [`${ApiSnapshotTag} 4`]: {
-    url: "/hello/world",
-    httpMethod: "get",
-    mock: {
-      statusCode: 501,
-      error: "not implemented!"
-    },
-    mockName: "fail"
-  }
-} as { [key: string]: IApiSnapshot };
-
-const snapshotsMissingName = {
-  ...snapshots,
-  [`${ApiSnapshotTag} 5`]: {
-    url: "/hello/world/2",
-    httpMethod: "get",
-    mock: {
-      statusCode: 501,
-      error: "not implemented!"
+  {
+    key: `${ApiSnapshotTag} 4`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world",
+      httpMethod: "get",
+      mock: {
+        statusCode: 501,
+        error: "not implemented!",
+        body: ""
+      },
+      mockName: "fail"
     }
   }
-};
+];
 
-const snapshotsMissingUrl = {
+const snapshotsMissingName = [
   ...snapshots,
-  [`${ApiSnapshotTag} 5`]: {
-    httpMethod: "get",
-    mock: {
-      statusCode: 501,
-      error: "not implemented!"
-    },
-    mockName: "fail"
+  {
+    key: `${ApiSnapshotTag} 5`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world/2",
+      httpMethod: "get",
+      mock: {
+        statusCode: 501,
+        error: "not implemented!"
+      }
+    }
   }
-};
+];
 
-const snapshotsInvalidMethod = {
+const snapshotsMissingUrl = [
   ...snapshots,
-  [`${ApiSnapshotTag} 5`]: {
-    url: "/hello/world/2",
-    httpMethod: "take",
-    mock: {
-      statusCode: 501,
-      error: "not implemented!"
-    },
-    mockName: "fail"
+  {
+    key: `${ApiSnapshotTag} 5`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      httpMethod: "get",
+      mock: {
+        statusCode: 501,
+        error: "not implemented!"
+      },
+      mockName: "fail"
+    }
   }
-};
+];
 
-const snapshotsMissingStatus = {
+const snapshotsInvalidMethod = [
   ...snapshots,
-  [`${ApiSnapshotTag} 5`]: {
-    url: "/hello/world/2",
-    httpMethod: "get",
-    mock: {
-      error: "not implemented!"
-    },
-    mockName: "fail"
+  {
+    key: `${ApiSnapshotTag} 5`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world/2",
+      httpMethod: "take",
+      mock: {
+        statusCode: 501,
+        error: "not implemented!"
+      },
+      mockName: "fail"
+    }
   }
-};
+];
 
-const snapshotsMissingMock = {
+const snapshotsMissingStatus = [
   ...snapshots,
-  [`${ApiSnapshotTag} 5`]: {
-    url: "/hello/world/2",
-    httpMethod: "get",
-    mockName: "fail"
+  {
+    key: `${ApiSnapshotTag} 5`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world/2",
+      httpMethod: "get",
+      mock: {
+        error: "not implemented!"
+      },
+      mockName: "fail"
+    }
   }
-};
+];
 
-const snapshotsDuplication = {
+const snapshotsMissingMock = [
   ...snapshots,
-  [`${ApiSnapshotTag} dup`]: snapshots[Object.keys(snapshots)[0]]
-};
+  {
+    key: `${ApiSnapshotTag} 5`,
+    filePath: "./test/generators/ApiGenerator.spec.ts",
+    data: {
+      url: "/hello/world/2",
+      httpMethod: "get",
+      mockName: "fail"
+    }
+  }
+];
+
+const snapshotsDuplication = [
+  ...snapshots,
+  {
+    ...snapshots[0],
+    key: `${ApiSnapshotTag} dup`
+  }
+];
 
 describe("ApiGenerator", () => {
-  let fileDeclaration: SourceFile;
   let generator: ApiGenerator;
+  let getFile;
 
   beforeEach(() => {
     const project = new Project();
-    fileDeclaration = project.createSourceFile("api");
+    getFile = () => project.createSourceFile("api");
     generator = new ApiGenerator();
   });
 
   it("Should throw if snapshot is missing mockName", () => {
     expect(() =>
-      generator.generate(fileDeclaration, snapshotsMissingName)
+      generator.generate(getFile, snapshotsMissingName)
     ).toThrowError();
   });
 
   it("Should throw if snapshot is missing url", () => {
-    expect(() =>
-      generator.generate(fileDeclaration, snapshotsMissingUrl)
-    ).toThrowError("Missing property url in snapshot '[APISnap] 5'");
+    expect(() => generator.generate(getFile, snapshotsMissingUrl)).toThrowError(
+      "Missing property url in snapshot '[APISnap] 5'"
+    );
   });
 
   it("Should throw if snapshot has invalid HTTP method", () => {
     expect(() =>
-      generator.generate(fileDeclaration, snapshotsInvalidMethod)
+      generator.generate(getFile, snapshotsInvalidMethod)
     ).toThrowError("Invalid http method 'take' in snapshot '[APISnap] 5'");
   });
 
   it("Should throw if snapshot is missing status code", () => {
     expect(() =>
-      generator.generate(fileDeclaration, snapshotsMissingStatus)
+      generator.generate(getFile, snapshotsMissingStatus)
     ).toThrowError("Missing property statusCode in snapshot '[APISnap] 5'");
   });
 
   it("Should throw if snapshot is missing mock property", () => {
     expect(() =>
-      generator.generate(fileDeclaration, snapshotsMissingMock)
+      generator.generate(getFile, snapshotsMissingMock)
     ).toThrowError("Missing property mock in snapshot '[APISnap] 5'");
   });
 
   it("Should throw if snapshot has duplicate mocks", () => {
     expect(() =>
-      generator.generate(fileDeclaration, snapshotsDuplication)
+      generator.generate(getFile, snapshotsDuplication)
     ).toThrowError(
       "Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '[APISnap] dup'"
     );
   });
 
   it("Should generate API endpoint mock", () => {
-    generator.generate(fileDeclaration, snapshots);
+    const fileDeclaration = generator.generate(getFile, snapshots);
 
     expect(fileDeclaration._compilerNode.text).toMatchSnapshot(
       "[API] [generator]"
