@@ -2,7 +2,7 @@ import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import pretty from "json-pretty";
 import _ from "lodash";
 import { MockGenerator } from "./base";
-import { ClassSnapshotTag } from "../matchers";
+import { ClassSnapshotTag } from "../matchers/contracts";
 
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};

@@ -3,7 +3,7 @@ import util from "util";
 import _ from "lodash";
 
 import { MockGenerator } from "./base";
-import { ApiSnapshotTag, IApiSnapshot } from "../matchers";
+import { ApiSnapshotTag, IApiSnapshot } from "../matchers/contracts";
 
 const methodParameter = "url";
 
