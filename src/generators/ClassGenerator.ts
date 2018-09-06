@@ -1,29 +1,32 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import pretty from "json-pretty";
 import _ from "lodash";
+import path from "path";
+
 import { MockGenerator } from "./base";
 import { ClassSnapshotTag } from "../matchers/contracts";
+import { IClassSnapshot, ISnapshot } from "../contracts";
 
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};
 
-  getFilename() {
-    return "ClassMocks.ts";
-  }
-
-  filterSnapKeys(keys: string[]): string[] {
-    return keys.filter(key => _.includes(key, ClassSnapshotTag));
-  }
-
-  generate(fileDecleration: SourceFile, snapshots: object) {
-    Object.keys(snapshots).forEach(key => this.parseSingleMock(snapshots[key]));
+  generate(
+    getFile: (fileName: string) => SourceFile,
+    allSnapshots: ISnapshot[]
+  ) {
+    const snapshots = allSnapshots.filter(snap =>
+      _.includes(snap.key, ClassSnapshotTag)
+    );
+    snapshots.forEach(snap =>
+      this.parseSingleMock(snap.data as IClassSnapshot, snap.packageName)
+    );
 
     const classNames = Object.keys(this.mockDef);
 
     classNames.forEach(className => {
-      const mockClassName = className + "Mocks";
+      const mockClassName = this.getMockClassName(className);
 
-      const myClassFile = fileDecleration;
+      const myClassFile = getFile(`${className}.ts`);
 
       const classDeclaration = myClassFile.addClass({
         name: mockClassName
@@ -71,12 +74,16 @@ export class ClassGenerator extends MockGenerator {
     });
   }
 
-  private parseSingleMock(snapshot) {
-    let classDef = this.mockDef[snapshot.className];
+  private parseSingleMock(snapshot: IClassSnapshot, packageName?: string) {
+    const fullClassName = this.getFullClassName(
+      snapshot.className,
+      packageName
+    );
+    let classDef = this.mockDef[fullClassName];
 
     if (!classDef) {
       classDef = {};
-      this.mockDef[snapshot.className] = classDef;
+      this.mockDef[fullClassName] = classDef;
     }
 
     let methodDef = classDef[snapshot.methodName];
@@ -91,10 +98,17 @@ export class ClassGenerator extends MockGenerator {
     } else {
       throw Error(
         "Duplicate mock name for method " +
-        snapshot.methodName +
-        ": " +
-        snapshot.mockName
+          snapshot.methodName +
+          ": " +
+          snapshot.mockName
       );
     }
+  }
+  private getFullClassName(className: string, packageName?: string): string {
+    return packageName ? path.join(packageName, className) : className;
+  }
+
+  private getMockClassName(fullClassName: string): string {
+    return `${path.basename(fullClassName)}Mocks`;
   }
 }

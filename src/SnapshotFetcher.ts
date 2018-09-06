@@ -1,6 +1,10 @@
 import path from "path";
+import fs from "fs";
 import globby from "globby";
 import { SnapshotState } from "jest-snapshot";
+
+import { ISnapshot } from "./contracts";
+import { fstat } from "fs";
 
 export class SnapshotFetcher {
   private static readonly patterns = [
@@ -9,7 +13,7 @@ export class SnapshotFetcher {
     "!./.{git,svn,hg}/**"
   ];
 
-  static getSnapshots(): object {
+  static getSnapshots(): ISnapshot[] {
     const snapFiles = SnapshotFetcher.getFilePaths();
     return SnapshotFetcher.getSnapsFromFiles(snapFiles);
   }
@@ -29,28 +33,53 @@ export class SnapshotFetcher {
     return filePaths;
   }
 
-  static getSnapsFromFiles(filePaths: string[]): object {
+  static getSnapsFromFiles(filePaths: string[]): ISnapshot[] {
     return filePaths
       .map(SnapshotFetcher.getSnapsFromFile)
-      .reduce((acc, cur) => ({ ...acc, ...cur }), {});
+      .reduce((acc, cur) => [...acc, ...cur], []);
   }
 
-  static getSnapsFromFile(filePath: string): object {
+  static getSnapsFromFile(filePath: string): ISnapshot[] {
     const absolutePath = path.resolve(filePath);
+    const packageName = SnapshotFetcher.getPackageName(filePath);
     const state = new SnapshotState(absolutePath, {
       snapshotPath: absolutePath
     });
     const data = state._snapshotData;
     const keys = Object.keys(data);
 
-    const snaps = keys
-      .filter(SnapshotFetcher.isMockshotSnap)
-      .reduce(
-        (acc, cur) => ({ ...acc, [cur]: JSON.parse(state._snapshotData[cur]) }),
-        {}
-      );
+    const snaps = keys.filter(SnapshotFetcher.isMockshotSnap).map(key => ({
+      key,
+      packageName,
+      filePath,
+      data: JSON.parse(state._snapshotData[key])
+    }));
 
     return snaps;
+  }
+
+  private static getPackageName(snapFilePath: string): string | undefined {
+    const packageJsonPath = SnapshotFetcher.findPackageJson(snapFilePath);
+    return packageJsonPath
+      ? SnapshotFetcher.getPackageNameFromFile(packageJsonPath)
+      : undefined;
+  }
+
+  private static findPackageJson(snapFilePath: string): string | null {
+    let dirName = snapFilePath;
+    while (dirName !== ".") {
+      dirName = path.dirname(dirName);
+      const maybePackageJson = path.join(dirName, "package.json");
+      if (fs.existsSync(maybePackageJson)) {
+        return maybePackageJson;
+      }
+    }
+    return null;
+  }
+
+  private static getPackageNameFromFile(packageJsonPath: string): string {
+    const packageJsonContent = fs.readFileSync(packageJsonPath).toString();
+    return JSON.parse(packageJsonContent).name;
   }
 
   private static isMockshotSnap(key: string): boolean {

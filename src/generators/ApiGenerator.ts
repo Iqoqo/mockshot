@@ -3,21 +3,21 @@ import util from "util";
 import _ from "lodash";
 
 import { MockGenerator } from "./base";
-import { ApiSnapshotTag, IApiSnapshot } from "../matchers/contracts";
+import { ApiSnapshotTag } from "../matchers/contracts";
+import { IApiSnapshot, ISnapshot } from "../contracts";
 
 const methodParameter = "url";
 
 export class ApiGenerator extends MockGenerator {
-  getFilename() {
-    return "API.ts";
-  }
-
-  filterSnapKeys(keys: string[]): string[] {
-    return keys.filter(key => _.includes(key, ApiSnapshotTag));
-  }
-
-  generate(fileDeclaration: SourceFile, snapshots: object) {
+  generate(
+    getFile: (fileName: string) => SourceFile,
+    allSnapshots: ISnapshot[]
+  ) {
+    const snapshots = allSnapshots.filter(snap =>
+      _.includes(snap.key, ApiSnapshotTag)
+    );
     const parsed = this.parse(snapshots);
+    const fileDeclaration = getFile("API.ts");
 
     fileDeclaration
       .addClass({ name: "API" })
@@ -33,6 +33,7 @@ export class ApiGenerator extends MockGenerator {
       });
 
     fileDeclaration.addInterfaces(this.getInterfacesFrom(parsed));
+    return fileDeclaration;
   }
 
   private getMethodsFrom(parsed) {
@@ -59,7 +60,8 @@ export class ApiGenerator extends MockGenerator {
 
   private parsed = {};
 
-  private validate(snap, key) {
+  private validate(snapshot) {
+    const { key, data: snap } = snapshot;
     if (!this.isHttpMethodValid(snap.httpMethod)) {
       throw Error(
         `Invalid http method '${snap.httpMethod}' in snapshot '${key}'`
@@ -79,7 +81,7 @@ export class ApiGenerator extends MockGenerator {
     }
   }
 
-  private fillMissingPath(snap) {
+  private fillMissingPath(snap: IApiSnapshot) {
     if (!_.has(this.parsed, snap.httpMethod)) {
       this.parsed[snap.httpMethod] = {};
     }
@@ -88,16 +90,18 @@ export class ApiGenerator extends MockGenerator {
     }
   }
 
-  private parse(snapshots: object) {
-    _.keys(snapshots).forEach(key => {
-      const snap: IApiSnapshot = snapshots[key];
+  private parse(snapshots: ISnapshot[]) {
+    snapshots.forEach(snapshot => {
+      const snap = snapshot.data as IApiSnapshot;
 
-      this.validate(snap, key)
-      this.fillMissingPath(snap)
+      this.validate(snapshot);
+      this.fillMissingPath(snap);
 
       if (_.has(this.parsed[snap.httpMethod][snap.url], snap.mockName)) {
         throw Error(
-          `Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '${key}'`
+          `Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '${
+            snapshot.key
+          }'`
         );
       }
       this.parsed[snap.httpMethod][snap.url][snap.mockName] = snap.mock;

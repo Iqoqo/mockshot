@@ -1,8 +1,9 @@
-import Project from "ts-simple-ast";
+import Project, { SourceFile } from "ts-simple-ast";
 import fs from "fs";
 import path from "path";
 
 import { MockGenerator } from "./generators/base";
+import { ISnapshot } from "./contracts";
 
 export class GeneratorRunner {
   private project: Project;
@@ -10,7 +11,7 @@ export class GeneratorRunner {
   constructor(
     private outDir: string,
     private generators: MockGenerator[],
-    private snapshots: object
+    private snapshots: ISnapshot[]
   ) {
     this.project = new Project();
   }
@@ -22,12 +23,13 @@ export class GeneratorRunner {
   }
 
   private runGenerator = (generator: MockGenerator) => {
-    const fileName = generator.getFilename();
-    const fileDeclaration = this.createSourceFile(fileName);
-    generator.doGenerate(fileDeclaration, this.snapshots);
+    generator.generate(
+      this.createSourceFile,
+      this.snapshots
+    );
   };
 
-  private createSourceFile = (mockFileName: string) => {
+  private createSourceFile = (mockFileName: string): SourceFile => {
     try {
       fs.unlinkSync(path.join(this.outDir, mockFileName));
       console.log("File exists", mockFileName, "removing...");
