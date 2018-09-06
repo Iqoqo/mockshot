@@ -3,8 +3,8 @@ import util from "util";
 import _ from "lodash";
 
 import { MockGenerator } from "./base";
-import { ApiSnapshotTag } from "../matchers/contracts";
-import { IApiSnapshot, ISnapshot } from "../contracts";
+import { ApiSnapshotTag } from "../matchers/ApiMockMatcher";
+import { ISnapshot, IApiSnapshot, IApiSnapData } from "../contracts";
 
 const methodParameter = "url";
 
@@ -15,7 +15,7 @@ export class ApiGenerator extends MockGenerator {
   ) {
     const snapshots = allSnapshots.filter(snap =>
       _.includes(snap.key, ApiSnapshotTag)
-    );
+    ) as IApiSnapshot[];
     const parsed = this.parse(snapshots);
     const fileDeclaration = getFile("API.ts");
 
@@ -60,7 +60,7 @@ export class ApiGenerator extends MockGenerator {
 
   private parsed = {};
 
-  private validate(snapshot) {
+  private validate(snapshot: IApiSnapshot): void {
     const { key, data: snap } = snapshot;
     if (!this.isHttpMethodValid(snap.httpMethod)) {
       throw Error(
@@ -81,7 +81,7 @@ export class ApiGenerator extends MockGenerator {
     }
   }
 
-  private fillMissingPath(snap: IApiSnapshot) {
+  private fillMissingPath(snap: IApiSnapData): void {
     if (!_.has(this.parsed, snap.httpMethod)) {
       this.parsed[snap.httpMethod] = {};
     }
@@ -90,9 +90,9 @@ export class ApiGenerator extends MockGenerator {
     }
   }
 
-  private parse(snapshots: ISnapshot[]) {
+  private parse(snapshots: IApiSnapshot[]) {
     snapshots.forEach(snapshot => {
-      const snap = snapshot.data as IApiSnapshot;
+      const snap = snapshot.data;
 
       this.validate(snapshot);
       this.fillMissingPath(snap);
@@ -114,7 +114,10 @@ export class ApiGenerator extends MockGenerator {
     return _.includes(["post", "get", "put", "delete", "patch"], method);
   }
 
-  private getSwitchStatement(methodParameter: string, options: object) {
+  private getSwitchStatement(
+    methodParameter: string,
+    options: object
+  ): (writer: CodeBlockWriter) => void {
     return (writer: CodeBlockWriter) =>
       writer
         .write(`switch (${methodParameter})`)

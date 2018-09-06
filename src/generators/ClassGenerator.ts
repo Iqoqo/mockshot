@@ -4,8 +4,8 @@ import _ from "lodash";
 import path from "path";
 
 import { MockGenerator } from "./base";
-import { ClassSnapshotTag } from "../matchers/contracts";
-import { IClassSnapshot, ISnapshot } from "../contracts";
+import { ClassSnapshotTag } from "../matchers/ClassMockMatcher";
+import { ISnapshot, IClassSnapshot, IClassSnapData } from "../contracts";
 
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};
@@ -16,9 +16,9 @@ export class ClassGenerator extends MockGenerator {
   ) {
     const snapshots = allSnapshots.filter(snap =>
       _.includes(snap.key, ClassSnapshotTag)
-    );
+    ) as IClassSnapshot[];
     snapshots.forEach(snap =>
-      this.parseSingleMock(snap.data as IClassSnapshot, snap.packageName)
+      this.parseSingleMock(snap.data, snap.packageName)
     );
 
     const classNames = Object.keys(this.mockDef);
@@ -69,7 +69,10 @@ export class ClassGenerator extends MockGenerator {
     });
   }
 
-  private parseSingleMock(snapshot: IClassSnapshot, packageName?: string) {
+  private parseSingleMock(
+    snapshot: IClassSnapData,
+    packageName?: string
+  ): void {
     const fullClassName = this.getFullClassName(
       snapshot.className,
       packageName
