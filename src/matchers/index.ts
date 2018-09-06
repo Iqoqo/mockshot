@@ -6,11 +6,15 @@ declare global {
     namespace jest {
         // tslint:disable-next-line:interface-name
         interface Matchers<R> {
-            toMatchMock(
+            toMatchClassMock(
                 className: string,
                 methodName: string,
                 mockName: string,
                 ignoredKeyPaths?: string[]
+            ): R;
+            toMatchApiMock(
+                response: object,
+                mockName: string,
             ): R;
         }
     }
