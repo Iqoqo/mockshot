@@ -1,5 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`toMatchMock Should igone fields within an array: [mockshot] [ClassSnap] [[HelloWorld complexArray complexArray1]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "complexArray",
+  "mock": {
+    "data": [
+      {
+        "id": 123
+      },
+      {
+        "id": 567
+      }
+    ]
+  },
+  "mockName": "complexArray1"
+}
+`;
+
+exports[`toMatchMock Should igone fields within an array: [mockshot] [ClassSnap] [[HelloWorld complexArray complexArray2]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "complexArray",
+  "mock": {
+    "data": {
+      "level1": [
+        {
+          "id": 123
+        },
+        {
+          "id": 456
+        }
+      ]
+    }
+  },
+  "mockName": "complexArray2"
+}
+`;
+
+exports[`toMatchMock Should igone fields within an array: [mockshot] [ClassSnap] [[HelloWorld complexArray complexArray3]] 1`] = `
+{
+  "className": "HelloWorld",
+  "methodName": "complexArray",
+  "mock": {
+    "data": [
+      {
+        "level1": [
+          {
+            "id": 123
+          },
+          {
+            "id": 456
+          }
+        ]
+      },
+      {
+        "level1": [
+          {
+            "id": 789
+          }
+        ]
+      }
+    ]
+  },
+  "mockName": "complexArray3"
+}
+`;
+
 exports[`toMatchMock Should match a default parameter: [mockshot] [ClassSnap] [[HelloWorld foo default-param]] 1`] = `
 {
   "className": "HelloWorld",
@@ -15,9 +82,9 @@ exports[`toMatchMock Should match mock with ignoredKeyPaths: [mockshot] [ClassSn
   "methodName": "bar",
   "mock": {
     "data": {
-      "_id": "12342423432"
+      "_id": "1234"
     },
-    "id": "123456758",
+    "id": "1234sddd56",
     "some": "value"
   },
   "mockName": "success"

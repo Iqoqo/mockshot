@@ -16,12 +16,24 @@ export function toMatchClassMock(
 
   if (ignoredKeyPaths && currentSnapshot) {
     const parsedSnapshot = JSON.parse(currentSnapshot);
-
     ignoredKeyPaths.forEach(keyPath => {
-      const val = get(parsedSnapshot.mock, keyPath);
-      const target = get(mock, keyPath);
-      if (val && target && typeof val === typeof target) {
-        set(mock, keyPath, val);
+      if (keyPath.indexOf("[") > 0 && keyPath.indexOf("]") > 0) {
+        var separators = ['\\\[', '\\\]'];
+        var array = keyPath.split(new RegExp(separators.join('|'), 'g'));
+        array.splice(array.length - 1);
+
+        var val = get(parsedSnapshot.mock, array[0]);
+        var target = get(mock, array[0]);
+        const newVal = target.map((_element, index) => val[index]);
+
+        set(mock, array[0], newVal);
+
+      } else {
+        const val = get(parsedSnapshot.mock, keyPath);
+        const target = get(mock, keyPath);
+        if (val && target && typeof val === typeof target) {
+          set(mock, keyPath, val);
+        }
       }
     });
   }
@@ -32,4 +44,6 @@ export function toMatchClassMock(
     pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag),
     message: () => `expected ${snapshot} to match tag ${snapshotTag}`
   };
+
+
 }
