@@ -1,74 +1,74 @@
 {
-  "name": "mockshot",
-  "version": "0.1.0",
-  "description": "Generate mocks from your snapshot tests",
-  "main": "dist",
-  "bin": {
-    "mockshot": "./dist/run.js"
-  },
-  "repository": "https://github.com/Iqoqo/mockshot.git",
-  "author": "Shlomo Kraus <shlomo.kraus@iqoqo.co>",
-  "license": "MIT",
-  "private": false,
-  "scripts": {
-    "build": "tsc",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "start": "node ./dist/run.js"
-  },
-  "jest": {
-    "rootDir": ".",
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "tsconfig.json"
-      }
+    "name": "mockshot",
+    "version": "0.1.1",
+    "description": "Generate mocks from your snapshot tests",
+    "main": "dist",
+    "bin": {
+        "mockshot": "./dist/run.js"
     },
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+    "repository": "https://github.com/Iqoqo/mockshot.git",
+    "author": "Shlomo Kraus <shlomo.kraus@iqoqo.co>",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "build": "tsc",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "start": "node ./dist/run.js"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "collectCoverage": false,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/",
-      "/dist/"
-    ]
-  },
-  "devDependencies": {
-    "@types/jest": "^23.3.1",
-    "@types/lodash": "^4.14.116",
-    "@types/node": "10.3.1",
-    "axios": "^0.18.0",
-    "fetch": "^1.1.0",
-    "prettier": "1.11.1",
-    "r2": "^2.0.1",
-    "request-promise-native": "^1.0.5",
-    "rimraf": "2.6.2",
-    "typescript": "3.0.3"
-  },
-  "dependencies": {
-    "glob": "^7.1.3",
-    "jest": "^23.1.0",
-    "json-beautify": "^1.0.1",
-    "json-pretty": "^0.0.1",
-    "lodash": "^4.17.10",
-    "rollup": "^0.62.0",
-    "rollup-plugin-commonjs": "^9.1.3",
-    "rollup-plugin-local-resolve": "^1.0.7",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-tslint": "^0.1.34",
-    "rollup-plugin-typescript2": "^0.15.1",
-    "ts-jest": "^22.4.6",
-    "ts-simple-ast": "14.4.2",
-    "tslint": "^5.10.0",
-    "tslint-config-prettier": "^1.13.0"
-  }
+    "jest": {
+        "rootDir": ".",
+        "globals": {
+            "ts-jest": {
+                "tsConfigFile": "tsconfig.json"
+            }
+        },
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|(\\.|/)(spec))\\.(jsx?|tsx?)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ],
+        "collectCoverage": false,
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/test/",
+            "/dist/"
+        ]
+    },
+    "devDependencies": {
+        "@types/jest": "^23.3.1",
+        "@types/lodash": "^4.14.116",
+        "@types/node": "10.3.1",
+        "axios": "^0.18.0",
+        "fetch": "^1.1.0",
+        "prettier": "1.11.1",
+        "r2": "^2.0.1",
+        "request-promise-native": "^1.0.5",
+        "rimraf": "2.6.2",
+        "typescript": "3.0.3"
+    },
+    "dependencies": {
+        "glob": "^7.1.3",
+        "jest": "^23.1.0",
+        "json-beautify": "^1.0.1",
+        "json-pretty": "^0.0.1",
+        "lodash": "^4.17.10",
+        "rollup": "^0.62.0",
+        "rollup-plugin-commonjs": "^9.1.3",
+        "rollup-plugin-local-resolve": "^1.0.7",
+        "rollup-plugin-sourcemaps": "^0.4.2",
+        "rollup-plugin-tslint": "^0.1.34",
+        "rollup-plugin-typescript2": "^0.15.1",
+        "ts-jest": "^22.4.6",
+        "ts-simple-ast": "14.4.2",
+        "tslint": "^5.10.0",
+        "tslint-config-prettier": "^1.13.0"
+    }
 }

@@ -18,7 +18,8 @@ exports[`toMatchMock Should match mock with ignoredKeyPaths: [mockshot] [ClassSn
       "_id": "12342423432"
     },
     "id": "123456758",
-    "some": "value"
+    "some": "value",
+    "timestamp": "some stringified value"
   },
   "mockName": "success"
 }
