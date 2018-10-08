@@ -5,12 +5,13 @@ class HelloWorld {
     switch (mock) {
       case "success":
         return {
-          "data": {
-            "_id": "1234"
+          data: {
+            _id: "1234"
           },
-          "id": "1234sddd56",
-          "some": "value"
-        }
+          id: "1234sddd56",
+          some: "value",
+          timestamp: new Date()
+        };
       default:
         throw Error("Unknown mock: " + mock);
     }
@@ -20,8 +21,8 @@ class HelloWorld {
     switch (mock) {
       case "success":
         return {
-          "foo": "barr"
-        }
+          foo: "barr"
+        };
       default:
         return "unknown";
     }
@@ -32,15 +33,27 @@ const hello = new HelloWorld();
 
 describe("toMatchMock", () => {
   it("Should return correct schema", () => {
-    expect(hello.foo("success")).toMatchMock(HelloWorld.name, "foo", "success");
+    expect(hello.foo("success")).toMatchClassMock(
+      HelloWorld.name,
+      "foo",
+      "success"
+    );
   });
 
   it("Should match a default parameter", () => {
-    expect(hello.foo("default-param")).toMatchMock(HelloWorld.name, "foo", "default-param");
+    expect(hello.foo("default-param")).toMatchClassMock(
+      HelloWorld.name,
+      "foo",
+      "default-param"
+    );
   });
 
   it("Should match mock with ignoredKeyPaths", () => {
-    expect(hello.bar("success")).toMatchMock(HelloWorld.name, "bar", "success", ["id", "data._id"]);
+    expect(hello.bar("success")).toMatchClassMock(
+      HelloWorld.name,
+      "bar",
+      "success",
+      ["id", "data._id", "timestamp"]
+    );
   });
-
 });

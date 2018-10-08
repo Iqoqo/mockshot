@@ -20,7 +20,11 @@ export function toMatchClassMock(
     ignoredKeyPaths.forEach(keyPath => {
       const val = get(parsedSnapshot.mock, keyPath);
       const target = get(mock, keyPath);
-      if (val && target && typeof val === typeof target) {
+      if (
+        val &&
+        target &&
+        (typeof val === typeof target || isTimestamp(target))
+      ) {
         set(mock, keyPath, val);
       }
     });
@@ -33,3 +37,5 @@ export function toMatchClassMock(
     message: () => `expected ${snapshot} to match tag ${snapshotTag}`
   };
 }
+
+const isTimestamp = target => "object" === typeof target && Date.parse(target);
