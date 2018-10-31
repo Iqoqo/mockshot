@@ -8,6 +8,8 @@ class HelloWorld {
           data: {
             _id: "1234"
           },
+          nullParam: null,
+          undefinedlParam: undefined,
           id: "1234sddd56",
           some: "value",
           timestamp: new Date()
