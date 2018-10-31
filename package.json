@@ -1,6 +1,6 @@
 {
   "name": "mockshot",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Generate mocks from your snapshot tests",
   "main": "dist",
   "bin": {
