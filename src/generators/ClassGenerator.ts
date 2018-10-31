@@ -1,5 +1,5 @@
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
-import stringify from 'json-stable-stringify';
+import pretty from "json-pretty";
 import _ from "lodash";
 import path from "path";
 
@@ -57,7 +57,7 @@ export class ClassGenerator extends MockGenerator {
           writer.write("switch (mock)").block(() => {
             mockNames.forEach(mockName => {
               writer.write(`case "${mockName}":`).indentBlock(() => {
-                writer.write(`return ${stringify(mocks[mockName], { space: '  ' })}`);
+                writer.write(`return ${pretty(mocks[mockName])}`);
               });
             });
             writer.write(`default:`).indentBlock(() => {
