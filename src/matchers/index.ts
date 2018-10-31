@@ -1,4 +1,4 @@
-import pretty from "json-pretty";
+import stringify from 'json-stable-stringify';
 import { toMatchApiMock } from "./ApiMockMatcher";
 import { toMatchClassMock } from "./ClassMockMatcher";
 
@@ -22,7 +22,7 @@ declare global {
 
 expect.addSnapshotSerializer({
     test: val => val.mock,
-    print: val => pretty(val)
+    print: val => stringify(val, { space: '  ' })
 });
 
 const toMatchMock = toMatchClassMock
