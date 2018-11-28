@@ -4,6 +4,84 @@ import { IClassSnapData } from "../contracts";
 export const ClassSnapshotTag = "[ClassSnap]";
 
 export function toMatchClassMock(
+  mock: any,
+  className: string,
+  methodName: string,
+  mockName: string,
+  ignoreFields: string[]
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock(
+  mock: any,
+  className: string,
+  methodName: string,
+  mockName: string
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock(
+  mock: any,
+  className: string,
+  methodName: string,
+  ignoreFields: string
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock(
+  mock: any,
+  className: string,
+  methodName: string
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock<T, P extends keyof T>(
+  mock: any,
+  mockedClass: { prototype: T },
+  methodName: P,
+  mockName: string,
+  ignoreFields: string[]
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock<T, P extends keyof T>(
+  mock: any,
+  mockedClass: { prototype: T },
+  methodName: P,
+  mockName: string
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock<T, P extends keyof T>(
+  mock: any,
+  mockedClass: { prototype: T },
+  methodName: P,
+  ignoreFields: string[]
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock<T, P extends keyof T>(
+  mock: any,
+  mockedClass: { prototype: T },
+  methodName: P
+): { message(): string | (() => string); pass: boolean };
+export function toMatchClassMock(
+  mock,
+  mockedClassOrClassName,
+  methodName,
+  mockNameOrIgnoreFields?,
+  maybeIgnoreFields?
+): { message(): string | (() => string); pass: boolean } {
+  const className: string =
+    typeof mockedClassOrClassName === "string"
+      ? mockedClassOrClassName
+      : mockedClassOrClassName.name;
+
+  let mockName: string = "success";
+  let ignoreFields: string[] = [];
+  if (typeof mockNameOrIgnoreFields === "string") {
+    mockName = mockNameOrIgnoreFields;
+  } else if (Array.isArray(mockNameOrIgnoreFields)) {
+    ignoreFields = mockNameOrIgnoreFields;
+  } else if (Array.isArray(maybeIgnoreFields)) {
+    ignoreFields = maybeIgnoreFields;
+  }
+
+  return toMatchClassMockImplementation(
+    mock,
+    className,
+    methodName,
+    mockName,
+    ignoreFields
+  );
+}
+function toMatchClassMockImplementation(
   mock,
   className: string,
   methodName: string,
