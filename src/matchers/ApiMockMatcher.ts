@@ -1,5 +1,5 @@
-import { IApiSnapData, IApiSnapDataBase } from "../contracts";
 import { MockshotTag, Success } from "../constants";
+import { IApiSnapData, IApiSnapDataBase } from "../contracts";
 
 export const ApiSnapshotTag = "[APISnap]";
 
