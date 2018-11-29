@@ -95,10 +95,10 @@ export class ClassGenerator extends MockGenerator {
       methodDef[snapshot.mockName] = snapshot.mock;
     } else {
       throw Error(
-        "Duplicate mock name for method " +
-          snapshot.methodName +
-          ": " +
-          snapshot.mockName
+        `Duplicate mock name on class: ${fullClassName} for method ` +
+        snapshot.methodName +
+        ": " +
+        snapshot.mockName
       );
     }
   }
