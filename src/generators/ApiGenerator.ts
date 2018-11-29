@@ -1,14 +1,15 @@
+import _ from "lodash";
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
-import _ from "lodash";
-
-import { MockGenerator } from "./base";
+import { IApiSnapData, IApiSnapshot, ISnapshot } from "../contracts";
 import { ApiSnapshotTag } from "../matchers/ApiMockMatcher";
-import { ISnapshot, IApiSnapshot, IApiSnapData } from "../contracts";
+import { MockGenerator } from "./base";
 
 const methodParameter = "url";
 
 export class ApiGenerator extends MockGenerator {
+  private parsed = {};
+
   generate(
     getFile: (fileName: string) => SourceFile,
     allSnapshots: ISnapshot[]
@@ -57,8 +58,6 @@ export class ApiGenerator extends MockGenerator {
       })
     }));
   }
-
-  private parsed = {};
 
   private validate(snapshot: IApiSnapshot): void {
     const { key, data: snap } = snapshot;

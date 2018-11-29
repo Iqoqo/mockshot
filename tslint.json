@@ -1,0 +1,22 @@
+{
+  "defaultSeverity": "warning",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "object-literal-sort-keys": false,
+    "trailing-comma": false,
+    "arrow-parens": false,
+    "interface-over-type-literal": false,
+    "no-console": false,
+    "semicolon": false,
+    "no-shadowed-variable": false,
+
+    "member-access": [true, "no-public"],
+    "no-return-await": true,
+    "no-unnecessary-callback-wrapper": true,
+    "object-literal-shorthand": true,
+    "no-implicit-dependencies": true,
+    "member-ordering": [true, { "order": "fields-first" }]
+  },
+  "rulesDirectory": []
+}

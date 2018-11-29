@@ -3,61 +3,44 @@ import { IClassSnapData } from "../contracts";
 
 export const ClassSnapshotTag = "[ClassSnap]";
 
+type MatcherReturn = {
+  pass: boolean;
+  message(): string | (() => string);
+};
+
 export function toMatchClassMock(
   mock: any,
   className: string,
   methodName: string,
-  mockName: string,
-  ignoreFields: string[]
-): { message(): string | (() => string); pass: boolean };
+  mockName?: string,
+  ignoreFields?: string[]
+): MatcherReturn;
 export function toMatchClassMock(
   mock: any,
   className: string,
   methodName: string,
-  mockName: string
-): { message(): string | (() => string); pass: boolean };
-export function toMatchClassMock(
-  mock: any,
-  className: string,
-  methodName: string,
-  ignoreFields: string
-): { message(): string | (() => string); pass: boolean };
-export function toMatchClassMock(
-  mock: any,
-  className: string,
-  methodName: string
-): { message(): string | (() => string); pass: boolean };
+  ignoreFields?: string[]
+): MatcherReturn;
 export function toMatchClassMock<T, P extends keyof T>(
   mock: any,
   mockedClass: { prototype: T },
   methodName: P,
-  mockName: string,
-  ignoreFields: string[]
-): { message(): string | (() => string); pass: boolean };
+  mockName?: string,
+  ignoreFields?: string[]
+): MatcherReturn;
 export function toMatchClassMock<T, P extends keyof T>(
   mock: any,
   mockedClass: { prototype: T },
   methodName: P,
-  mockName: string
-): { message(): string | (() => string); pass: boolean };
-export function toMatchClassMock<T, P extends keyof T>(
-  mock: any,
-  mockedClass: { prototype: T },
-  methodName: P,
-  ignoreFields: string[]
-): { message(): string | (() => string); pass: boolean };
-export function toMatchClassMock<T, P extends keyof T>(
-  mock: any,
-  mockedClass: { prototype: T },
-  methodName: P
-): { message(): string | (() => string); pass: boolean };
+  ignoreFields?: string[]
+): MatcherReturn;
 export function toMatchClassMock(
   mock,
   mockedClassOrClassName,
   methodName,
   mockNameOrIgnoreFields?,
   maybeIgnoreFields?
-): { message(): string | (() => string); pass: boolean } {
+): MatcherReturn {
   const className: string =
     typeof mockedClassOrClassName === "string"
       ? mockedClassOrClassName
@@ -87,7 +70,7 @@ function toMatchClassMockImplementation(
   methodName: string,
   mockName: string,
   ignoredKeyPaths?: string[]
-): { message(): string | (() => string); pass: boolean } {
+): MatcherReturn {
   const snapshotTag = `[mockshot] ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
   const snapshotName = `${this.currentTestName}: ${snapshotTag} 1`;
   const currentSnapshot = this.snapshotState._snapshotData[snapshotName];

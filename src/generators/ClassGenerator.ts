@@ -1,11 +1,10 @@
-import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
-import stringify from 'json-stable-stringify';
+import stringify from "json-stable-stringify";
 import _ from "lodash";
 import path from "path";
-
-import { MockGenerator } from "./base";
+import { SourceFile } from "ts-simple-ast";
+import { IClassSnapData, IClassSnapshot, ISnapshot } from "../contracts";
 import { ClassSnapshotTag } from "../matchers/ClassMockMatcher";
-import { ISnapshot, IClassSnapshot, IClassSnapData } from "../contracts";
+import { MockGenerator } from "./base";
 
 export class ClassGenerator extends MockGenerator {
   private mockDef: any = {};
@@ -41,7 +40,7 @@ export class ClassGenerator extends MockGenerator {
       methodNames.forEach(methodName => {
         const mocks = methods[methodName];
         const mockNames = Object.keys(mocks);
-        let mockTypes = mockNames.map(value => {
+        const mockTypes = mockNames.map(value => {
           return `"${value}"`;
         });
         const types = mockTypes.join(" | ");
@@ -57,7 +56,9 @@ export class ClassGenerator extends MockGenerator {
           writer.write("switch (mock)").block(() => {
             mockNames.forEach(mockName => {
               writer.write(`case "${mockName}":`).indentBlock(() => {
-                writer.write(`return ${stringify(mocks[mockName], { space: '  ' })}`);
+                writer.write(
+                  `return ${stringify(mocks[mockName], { space: "  " })}`
+                );
               });
             });
             writer.write(`default:`).indentBlock(() => {
@@ -90,15 +91,15 @@ export class ClassGenerator extends MockGenerator {
       classDef[snapshot.methodName] = methodDef;
     }
 
-    let mockName = methodDef[snapshot.mockName];
+    const mockName = methodDef[snapshot.mockName];
     if (!mockName) {
       methodDef[snapshot.mockName] = snapshot.mock;
     } else {
       throw Error(
         `Duplicate mock name on class: ${fullClassName} for method ` +
-        snapshot.methodName +
-        ": " +
-        snapshot.mockName
+          snapshot.methodName +
+          ": " +
+          snapshot.mockName
       );
     }
   }

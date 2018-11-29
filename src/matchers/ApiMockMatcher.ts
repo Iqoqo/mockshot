@@ -1,4 +1,4 @@
-import { IApiSnapDataBase, IApiSnapData, IApiSnapshot } from "../contracts";
+import { IApiSnapData, IApiSnapDataBase } from "../contracts";
 
 export const ApiSnapshotTag = "[APISnap]";
 
@@ -10,14 +10,14 @@ async function parse(response): Promise<IApiSnapDataBase> {
     response.status &&
     response.data
   ) {
-    //response is done with axios library (https://www.npmjs.com/package/axios)
+    // response is done with axios library (https://www.npmjs.com/package/axios)
     return {
       httpMethod: response.config.method.toLowerCase(),
       url: response.config.url,
       mock: { statusCode: response.status, body: response.data }
     };
   } else if (response.response && response.opts && response.opts.method) {
-    //response is done with r2 library (https://github.com/mikeal/r2)
+    // response is done with r2 library (https://github.com/mikeal/r2)
     const res = await response.response;
     return {
       httpMethod: response.opts.method.toLowerCase(),
@@ -25,14 +25,14 @@ async function parse(response): Promise<IApiSnapDataBase> {
       mock: { statusCode: res.status, body: await response.text }
     };
   } else if (response.url && response.status) {
-    //response is done with fetch library (https://www.npmjs.com/package/node-fetch)
+    // response is done with fetch library (https://www.npmjs.com/package/node-fetch)
     return {
       httpMethod: response.method || "get", // this doesn't work
       url: response.url,
       mock: { statusCode: response.status, body: await response.text() }
     };
   } else if (response.status && response.req && response.req.method) {
-    //response is done with chai library (https://www.google.it.on.your/own)
+    // response is done with chai library (https://www.google.it.on.your/own)
     return {
       httpMethod: response.req.method.toLowerCase(),
       url: response.req.path,
