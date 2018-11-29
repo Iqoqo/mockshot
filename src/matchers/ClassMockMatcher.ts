@@ -1,4 +1,4 @@
-import { get, set } from "lodash";
+import { cloneDeep, get, set } from "lodash";
 import { IClassSnapData } from "../contracts";
 
 export const ClassSnapshotTag = "[ClassSnap]";
@@ -8,43 +8,46 @@ type MatcherReturn = {
   message(): string | (() => string);
 };
 
-export function toMatchClassMock(
-  mock: any,
-  className: string,
-  methodName: string,
-  mockName?: string,
-  ignoreFields?: string[]
-): MatcherReturn;
-export function toMatchClassMock(
-  mock: any,
-  className: string,
-  methodName: string,
-  ignoreFields?: string[]
-): MatcherReturn;
-export function toMatchClassMock<T, P extends keyof T>(
-  mock: any,
-  mockedClass: { prototype: T },
-  methodName: P,
-  mockName?: string,
-  ignoreFields?: string[]
-): MatcherReturn;
-export function toMatchClassMock<T, P extends keyof T>(
-  mock: any,
-  mockedClass: { prototype: T },
-  methodName: P,
-  ignoreFields?: string[]
-): MatcherReturn;
+export interface ClassMatcher<R> {
+  toMatchClassMock<T extends object, P extends keyof T>(
+    // mock: any,
+    mockedClass: T,
+    methodName: P,
+    mockName?: string,
+    ignoreFields?: string[]
+  ): R;
+  toMatchClassMock<T extends object, P extends keyof T>(
+    // mock: any,
+    mockedClass: T,
+    methodName: P,
+    ignoreFields?: string[]
+  ): R;
+  toMatchClassMock(
+    // mock: any,
+    className: string,
+    methodName: string,
+    mockName?: string,
+    ignoreFields?: string[]
+  ): R;
+  toMatchClassMock(
+    // mock: any,
+    className: string,
+    methodName: string,
+    ignoreFields?: string[]
+  ): R;
+}
+
 export function toMatchClassMock(
   mock,
   mockedClassOrClassName,
   methodName,
   mockNameOrIgnoreFields?,
   maybeIgnoreFields?
-): MatcherReturn {
+) {
   const className: string =
     typeof mockedClassOrClassName === "string"
       ? mockedClassOrClassName
-      : mockedClassOrClassName.name;
+      : mockedClassOrClassName.constructor.name;
 
   let mockName: string = "success";
   let ignoreFields: string[] = [];
@@ -52,7 +55,8 @@ export function toMatchClassMock(
     mockName = mockNameOrIgnoreFields;
   } else if (Array.isArray(mockNameOrIgnoreFields)) {
     ignoreFields = mockNameOrIgnoreFields;
-  } else if (Array.isArray(maybeIgnoreFields)) {
+  }
+  if (Array.isArray(maybeIgnoreFields)) {
     ignoreFields = maybeIgnoreFields;
   }
 
@@ -76,24 +80,30 @@ function toMatchClassMockImplementation(
   const snapshotTag = `[mockshot] ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
   const snapshotName = `${self.currentTestName}: ${snapshotTag} 1`;
   const currentSnapshot = self.snapshotState._snapshotData[snapshotName];
+  const mockClone = cloneDeep(mock);
 
   if (ignoredKeyPaths && currentSnapshot) {
     const parsedSnapshot = JSON.parse(currentSnapshot);
 
     ignoredKeyPaths.forEach(keyPath => {
       const val = get(parsedSnapshot.mock, keyPath);
-      const target = get(mock, keyPath);
+      const target = get(mockClone, keyPath);
       if (
         val &&
         target &&
         (typeof val === typeof target || isTimestamp(target))
       ) {
-        set(mock, keyPath, val);
+        set(mockClone, keyPath, val);
       }
     });
   }
 
-  const snapshot: IClassSnapData = { className, methodName, mockName, mock };
+  const snapshot: IClassSnapData = {
+    className,
+    methodName,
+    mockName,
+    mock: mockClone
+  };
 
   return {
     pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag),
