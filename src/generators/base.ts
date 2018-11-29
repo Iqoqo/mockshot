@@ -1,5 +1,4 @@
 import { SourceFile } from "ts-simple-ast";
-import _ from "lodash";
 import { ISnapshot } from "../contracts";
 
 export abstract class MockGenerator {

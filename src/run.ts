@@ -1,5 +1,5 @@
-import { ApiGenerator, ClassGenerator } from "./generators";
 import { GeneratorRunner } from "./GeneratorRunner";
+import { ApiGenerator, ClassGenerator } from "./generators";
 import { SnapshotFetcher } from "./SnapshotFetcher";
 
 export async function run(outputDir: string) {

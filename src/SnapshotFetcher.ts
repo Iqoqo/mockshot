@@ -1,10 +1,8 @@
-import path from "path";
 import fs from "fs";
 import globby from "globby";
 import { SnapshotState } from "jest-snapshot";
-
+import path from "path";
 import { ISnapshot } from "./contracts";
-import { fstat } from "fs";
 
 export class SnapshotFetcher {
   private static readonly patterns = [

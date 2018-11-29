@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getOwnSnapshots should generate a snapshot: [mockshot] [ClassSnap] [[fakeClass fakeMethod fakeMock]] 1`] = `
+{
+  "className": "fakeClass",
+  "methodName": "fakeMethod",
+  "mock": {
+    "foo": {
+      "bar": "buzz"
+    },
+    "hello": "world"
+  },
+  "mockName": "fakeMock"
+}
+`;
