@@ -4,7 +4,6 @@ import { toMatchClassMock } from "./ClassMockMatcher";
 
 declare global {
   namespace jest {
-    // tslint:disable-next-line:interface-name
     interface Matchers<R> {
       toMatchClassMock(
         className: string,

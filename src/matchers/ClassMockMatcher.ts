@@ -57,6 +57,7 @@ export function toMatchClassMock(
   }
 
   return toMatchClassMockImplementation(
+    this,
     mock,
     className,
     methodName,
@@ -65,6 +66,7 @@ export function toMatchClassMock(
   );
 }
 function toMatchClassMockImplementation(
+  self,
   mock,
   className: string,
   methodName: string,
@@ -72,8 +74,8 @@ function toMatchClassMockImplementation(
   ignoredKeyPaths?: string[]
 ): MatcherReturn {
   const snapshotTag = `[mockshot] ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
-  const snapshotName = `${this.currentTestName}: ${snapshotTag} 1`;
-  const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
+  const snapshotName = `${self.currentTestName}: ${snapshotTag} 1`;
+  const currentSnapshot = self.snapshotState._snapshotData[snapshotName];
 
   if (ignoredKeyPaths && currentSnapshot) {
     const parsedSnapshot = JSON.parse(currentSnapshot);

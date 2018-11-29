@@ -10,6 +10,7 @@
     "no-console": false,
     "semicolon": false,
     "no-shadowed-variable": false,
+    "interface-name": false,
 
     "member-access": [true, "no-public"],
     "no-return-await": true,
