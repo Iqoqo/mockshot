@@ -1,16 +1,10 @@
 import stringify from "json-stable-stringify";
 import { toMatchApiMock } from "./ApiMockMatcher";
-import { toMatchClassMock } from "./ClassMockMatcher";
+import { ClassMatcher, toMatchClassMock } from "./ClassMockMatcher";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
-      toMatchClassMock(
-        className: string,
-        methodName: string,
-        mockName: string,
-        ignoredKeyPaths?: string[]
-      ): R;
+    interface Matchers<R> extends ClassMatcher<R> {
       toMatchApiMock(response: object, mockName: string): R;
     }
   }

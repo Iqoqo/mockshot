@@ -1,38 +1,105 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toMatchMock Should match a default parameter: [mockshot] [ClassSnap] [[HelloWorld foo default-param]] 1`] = `
+exports[`Class mock matcher should create a mock with correct data and metadata ~1~: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1`] = `
 {
-  "className": "HelloWorld",
-  "methodName": "foo",
-  "mock": "unknown",
-  "mockName": "default-param"
-}
-`;
-
-exports[`toMatchMock Should match mock with ignoredKeyPaths: [mockshot] [ClassSnap] [[HelloWorld bar success]] 1`] = `
-{
-  "className": "HelloWorld",
-  "methodName": "bar",
+  "className": "TestClass",
+  "methodName": "getSomeObject",
   "mock": {
-    "data": {
-      "_id": "12342423432"
+    "fizz": {
+      "bizz": "buzz"
     },
-    "id": "123456758",
-    "nullParam": null,
-    "some": "value",
-    "timestamp": "some stringified value"
+    "foo": "bar"
+  },
+  "mockName": "ok"
+}
+`;
+
+exports[`Class mock matcher should create a mock with default mockName ~2~: [mockshot] [ClassSnap] [[TestClass getSomeObject success]] 1`] = `
+{
+  "className": "TestClass",
+  "methodName": "getSomeObject",
+  "mock": {
+    "fizz": {
+      "bizz": "buzz"
+    },
+    "foo": "bar"
   },
   "mockName": "success"
 }
 `;
 
-exports[`toMatchMock Should return correct schema: [mockshot] [ClassSnap] [[HelloWorld foo success]] 1`] = `
+exports[`Class mock matcher should extract class name from instance ~3~: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1`] = `
 {
-  "className": "HelloWorld",
-  "methodName": "foo",
+  "className": "TestClass",
+  "methodName": "getSomeObject",
   "mock": {
-    "foo": "barr"
+    "fizz": {
+      "bizz": "buzz"
+    },
+    "foo": "bar"
+  },
+  "mockName": "ok"
+}
+`;
+
+exports[`Class mock matcher should generate basic mock ~7~: [mockshot] [ClassSnap] [[TestClass sayHello success]] 1`] = `
+{
+  "className": "TestClass",
+  "methodName": "sayHello",
+  "mock": "hello, Idan",
+  "mockName": "success"
+}
+`;
+
+exports[`Class mock matcher should ignore fields ~4~: [mockshot] [ClassSnap] [[TestClass getTimeObj ok]] 1`] = `
+{
+  "className": "TestClass",
+  "methodName": "getTimeObj",
+  "mock": {
+    "hey": "ho!",
+    "time": "2018-11-29T23:31:13.895Z"
+  },
+  "mockName": "ok"
+}
+`;
+
+exports[`Class mock matcher should ignore fields without a mockName ~5~: [mockshot] [ClassSnap] [[TestClass getTimeObj success]] 1`] = `
+{
+  "className": "TestClass",
+  "methodName": "getTimeObj",
+  "mock": {
+    "hey": "ho!",
+    "time": "2018-11-29T23:31:13.897Z"
   },
   "mockName": "success"
+}
+`;
+
+exports[`Class mock matcher should ignore nested fields ~8~: [mockshot] [ClassSnap] [[TestClass getArray success]] 1`] = `
+{
+  "className": "TestClass",
+  "methodName": "getArray",
+  "mock": [
+    "a",
+    "2018-11-29T23:37:17.358Z",
+    "c",
+    [
+      "d",
+      "2018-11-29T23:37:17.358Z"
+    ]
+  ],
+  "mockName": "success"
+}
+`;
+
+exports[`Class mock matcher should not mutate result while ignoring fields ~6~: [mockshot] [ClassSnap] [[TestClass getTimeObj ok]] 1`] = `
+{
+  "className": "TestClass",
+  "methodName": "getTimeObj",
+  "mock": {
+    "hey": "ho!",
+    "time": "2018-11-29T23:31:13.898Z"
+  },
+  "mockName": "ok"
 }
 `;
