@@ -1,4 +1,4 @@
-import "../../src/matchers";
+import "../../src";
 
 class HelloWorld {
   bar(mock: "success"): any {

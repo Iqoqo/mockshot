@@ -17,12 +17,7 @@ describe("getOwnSnapshots", () => {
   it("read the snapshot correctly", () => {
     const ownSnapshots = getOwnSnapshots(__filename);
     expect(ownSnapshots).toHaveLength(1);
-    expect(ownSnapshots[0].data).toEqual({
-      className,
-      methodName,
-      mockName,
-      mock: someObject
-    });
+    expect(ownSnapshots[0].data.mock).toEqual(someObject);
     expect(ownSnapshots[0].packageName).toBe("mockshot");
     expect(ownSnapshots[0].key).toBe(
       "getOwnSnapshots should generate a snapshot: [mockshot] [ClassSnap] [[fakeClass fakeMethod fakeMock]] 1"
