@@ -1,4 +1,5 @@
 import { IApiSnapData, IApiSnapDataBase } from "../contracts";
+import { MockshotTag, Success } from "../constants";
 
 export const ApiSnapshotTag = "[APISnap]";
 
@@ -48,7 +49,7 @@ async function parse(response): Promise<IApiSnapDataBase> {
   }
 }
 
-export async function toMatchApiMock(response, mockName: string) {
+export async function toMatchApiMock(response, mockName: string = Success) {
   let parsedResponse: IApiSnapDataBase;
   try {
     parsedResponse = await parse(response);
@@ -57,7 +58,7 @@ export async function toMatchApiMock(response, mockName: string) {
   }
 
   const snapshot: IApiSnapData = { mockName, ...parsedResponse };
-  const snapshotTag = `[mockshot] ${ApiSnapshotTag} [${
+  const snapshotTag = `${MockshotTag} ${ApiSnapshotTag} [${
     parsedResponse.httpMethod
   } ${parsedResponse.url} ${mockName}]`;
 

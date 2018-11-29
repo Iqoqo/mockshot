@@ -1,4 +1,5 @@
 import { cloneDeep, get, set } from "lodash";
+import { MockshotTag, Success } from "../constants";
 import { IClassSnapData } from "../contracts";
 
 export const ClassSnapshotTag = "[ClassSnap]";
@@ -49,7 +50,7 @@ export function toMatchClassMock(
       ? mockedClassOrClassName
       : mockedClassOrClassName.constructor.name;
 
-  let mockName: string = "success";
+  let mockName: string = Success;
   let ignoreFields: string[] = [];
   if (typeof mockNameOrIgnoreFields === "string") {
     mockName = mockNameOrIgnoreFields;
@@ -77,7 +78,7 @@ function toMatchClassMockImplementation(
   mockName: string,
   ignoredKeyPaths?: string[]
 ): MatcherReturn {
-  const snapshotTag = `[mockshot] ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
+  const snapshotTag = `${MockshotTag} ${ClassSnapshotTag} [[${className} ${methodName} ${mockName}]]`;
   const snapshotName = `${self.currentTestName}: ${snapshotTag} 1`;
   const currentSnapshot = self.snapshotState._snapshotData[snapshotName];
   const mockClone = cloneDeep(mock);
