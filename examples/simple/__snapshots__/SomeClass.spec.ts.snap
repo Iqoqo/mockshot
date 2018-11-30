@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SomeClass getSomeData should return the correct shape: [mockshot] [ClassSnap] [[Function getSomeData success]] 1`] = `
+{
+  "className": "Function",
+  "methodName": "getSomeData",
+  "mock": {
+    "lorem": "ipsum"
+  },
+  "mockName": "success"
+}
+`;

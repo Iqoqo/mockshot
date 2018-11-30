@@ -1,6 +1,16 @@
 # Mockshot
 
-A mocking framework which generates mocks from your snapshot tests.
+Automatic mocks generation using snapshot testing
+
+## TL;DR
+
+1. Write a [snapshot test](https://jestjs.io/docs/en/snapshot-testing) for a method. 
+2. Use the snapshot's output as blueprints for generating a mock.
+3. Let other methods use that mock in their tests. 
+
+This pattern is called *Test Coupling* since two isolated unit tests are coupled together by a mock. That way, a change in one's interface will lead to a change in the mock and from there to all consumer's tests.
+
+
 
 ## Contents
 
