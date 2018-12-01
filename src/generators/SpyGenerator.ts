@@ -1,4 +1,5 @@
 import stringify from "json-stable-stringify";
+import path from "path";
 import { SourceFile, VariableDeclarationKind } from "ts-simple-ast";
 import { IClassSnapshot, ISnapshot, SingleClassMockTree } from "../contracts";
 import { ClassSnapshotTag } from "../matchers/ClassMockMatcher";
@@ -14,7 +15,7 @@ export class ClassSpyGenerator extends MockGenerator {
     const tree = parseClassSnapshots(classSnapshots);
 
     Object.keys(tree).forEach(filePath => {
-      const file = getFile(filePath);
+      const file = getFile(this.getFilePath(filePath));
       const { className, classContent } = tree[filePath];
       this.writeSpy(file, className, classContent);
     });
@@ -147,5 +148,9 @@ export class ClassSpyGenerator extends MockGenerator {
 
   private getSpyClassName(className: string): string {
     return className.charAt(0).toLowerCase() + className.slice(1) + "Spy";
+  }
+
+  private getFilePath(filePath): string {
+    return path.join("spies", filePath);
   }
 }
