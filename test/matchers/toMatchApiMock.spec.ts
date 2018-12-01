@@ -65,12 +65,7 @@ describe("toMatchApiMock()", () => {
     expect(data.url).toBe(path);
   });
 
-  it("Should work with fetch module", async () => {
-    const res = await fetch(testUrl);
-    await expect(res).toMatchApiMock("fetch-success");
-  });
-
-  it.skip("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
+  it("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
     const res = {
       statttus: 200,
       my_url: testUrl

@@ -4,13 +4,13 @@ import { IApiSnapData, IApiSnapDataBase, MatcherReturn } from "../contracts";
 
 export const ApiSnapshotTag = "[APISnap]";
 
-export async function toMatchApiMock(
+export function toMatchApiMock(
   response,
   mockName: string = Success
-): Promise<MatcherReturn> {
+): MatcherReturn {
   let parsedResponse: IApiSnapDataBase;
   try {
-    parsedResponse = await parse(response);
+    parsedResponse = parse(response);
   } catch (err) {
     return { pass: false, message: () => err.message };
   }
@@ -26,7 +26,7 @@ export async function toMatchApiMock(
   };
 }
 
-async function parse(response): Promise<IApiSnapDataBase> {
+function parse(response): IApiSnapDataBase {
   if (
     response.config &&
     response.config.method &&
@@ -40,13 +40,6 @@ async function parse(response): Promise<IApiSnapDataBase> {
       url: getPathname(response.config.url),
       mock: { statusCode: response.status, body: response.data }
     };
-  } else if (response.url && response.status) {
-    // response is done with fetch library (https://www.npmjs.com/package/node-fetch)
-    return {
-      httpMethod: response.method || "get", // this doesn't work
-      url: response.url,
-      mock: { statusCode: response.status, body: await response.text() }
-    };
   } else if (response.status && response.req && response.req.method) {
     // response is done with chai library (https://www.google.it.on.your/own)
     return {
@@ -56,9 +49,9 @@ async function parse(response): Promise<IApiSnapDataBase> {
     };
   } else {
     throw Error(
-      `The response is not supported.
-       we're supporting only the usage of: chai & axios
-       You can submit an issue on https://github.com/Iqoqo/mockshot/issues to add support for another library`
+      `The response type is not supported.
+       we're supporting only the usage of: chai & axios.
+       You can submit an issue on https://github.com/iqoqo/mockshot/issues to add support for another library`
     );
   }
 }
