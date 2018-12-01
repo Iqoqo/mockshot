@@ -1,4 +1,5 @@
-import { SourceFile, FileNotFoundError } from "ts-simple-ast";
+import stringify from "json-stable-stringify";
+import { SourceFile, VariableDeclarationKind } from "ts-simple-ast";
 import { IClassSnapshot, ISnapshot, SingleClassMockTree } from "../contracts";
 import { ClassSnapshotTag } from "../matchers/ClassMockMatcher";
 import { MockGenerator } from "./base";
@@ -24,6 +25,10 @@ export class ClassSpyGenerator extends MockGenerator {
   ) {
     this.writeMockshotMockInterface(file);
     this.writeSpyInterface(file, className, classTree);
+    file.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{ name: "classTree", initializer: stringify(classTree) }]
+    });
   }
 
   private writeMockshotMockInterface(file: SourceFile) {
