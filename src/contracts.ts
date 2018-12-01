@@ -36,7 +36,8 @@ export interface IApiSnapDataBase {
 
 export type ClassMockTree = {
   [mockPath: string]: {
-    [className: string]: SingleClassMockTree;
+    className: string;
+    classContent: SingleClassMockTree;
   };
 };
 

@@ -25,9 +25,12 @@ export class ClassSpyGenerator extends MockGenerator {
   ) {
     this.writeMockshotMockInterface(file);
     this.writeSpyInterface(file, className, classTree);
-    file.addVariableStatement({
-      declarationKind: VariableDeclarationKind.Const,
-      declarations: [{ name: "classTree", initializer: stringify(classTree) }]
+    this.writeClassTree(file, classTree);
+
+    file.addFunction({
+      name: "getSpy<P extends string>",
+      parameters: [{ name: "methodName", type: "string" }],
+      returnType: "MockshotMock<P>"
     });
   }
 
@@ -50,6 +53,13 @@ export class ClassSpyGenerator extends MockGenerator {
     file.addInterface({
       name: `${className}Spy`,
       properties: this.getMethodsTypes(classTree)
+    });
+  }
+
+  private writeClassTree(file: SourceFile, classTree: SingleClassMockTree) {
+    file.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{ name: "classTree", initializer: stringify(classTree) }]
     });
   }
 

@@ -103,7 +103,8 @@ const mockSnapObjectNoPackage = {
 
 const parseTreeResult = {
   "mockshot/UserService.ts": {
-    UserService: {
+    className: "UserService",
+    classContent: {
       getUser: {
         fail: {
           meta: {
@@ -141,7 +142,8 @@ const parseTreeResult = {
 
 const parseNoPackageNameResult = {
   "mockshot/UserService.ts": {
-    UserService: {
+    className: "UserService",
+    classContent: {
       getUser: {
         success: {
           meta: {
@@ -156,7 +158,8 @@ const parseNoPackageNameResult = {
     }
   },
   "UserService.ts": {
-    UserService: {
+    className: "UserService",
+    classContent: {
       getUser: {
         success: {
           meta: {
@@ -174,7 +177,8 @@ const parseNoPackageNameResult = {
 
 const paseFromDifferentPackagesResult = {
   "mockshot/UserService.ts": {
-    UserService: {
+    className: "UserService",
+    classContent: {
       getUser: {
         success: {
           meta: {
@@ -189,7 +193,8 @@ const paseFromDifferentPackagesResult = {
     }
   },
   "jest/UserService.ts": {
-    UserService: {
+    className: "UserService",
+    classContent: {
       getUser: {
         success: {
           meta: {

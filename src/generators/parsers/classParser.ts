@@ -17,7 +17,7 @@ function addSingleSnapshot(
   const { className, methodName, mockName, mock } = snap.data;
   const mockFilePath = getFilePath(snap);
 
-  const mockPath = [mockFilePath, className, methodName, mockName];
+  const mockPath = [mockFilePath, "classContent", methodName, mockName];
   const meta = { key: snap.key, originFile: snap.filePath };
 
   if (has(classTree, mockPath)) {
@@ -28,6 +28,7 @@ function addSingleSnapshot(
     );
   }
   set(classTree, mockPath, { mock, meta });
+  classTree[mockFilePath].className = className;
 }
 
 function getFilePath(snap: IClassSnapshot): string {
