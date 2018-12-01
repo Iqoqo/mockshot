@@ -1,5 +1,5 @@
-import { MockshotTag, Success } from "../constants";
 import url from "url";
+import { MockshotTag, Success } from "../constants";
 import { IApiSnapData, IApiSnapDataBase, MatcherReturn } from "../contracts";
 
 export const ApiSnapshotTag = "[APISnap]";

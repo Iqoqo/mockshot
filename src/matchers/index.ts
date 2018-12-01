@@ -6,7 +6,7 @@ declare global {
   namespace jest {
     interface Matchers<R> extends ClassMatcher<R> {
       // toMatchApiMock(response: object, mockName: string): R;
-      toMatchApiMock(mockName: string): R;
+      toMatchApiMock(mockName?: string): R;
     }
   }
 }

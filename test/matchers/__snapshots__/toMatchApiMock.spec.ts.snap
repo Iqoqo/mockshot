@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`toMatchApiMock() Should use success mockName if none provided ~3~: [mockshot] [APISnap] [post /login success] 1`] = `
+{
+  "httpMethod": "post",
+  "mock": {
+    "body": {
+      "foo": "bar",
+      "hello": "world"
+    },
+    "statusCode": 200
+  },
+  "mockName": "success",
+  "url": "/login"
+}
+`;
+
 exports[`toMatchApiMock() Should work with axios module ~1~: [mockshot] [APISnap] [get /users/123 axios-success] 1`] = `
 {
   "httpMethod": "get",
@@ -27,17 +42,5 @@ exports[`toMatchApiMock() Should work with chai module ~2~: [mockshot] [APISnap]
   },
   "mockName": "chai-success",
   "url": "/login"
-}
-`;
-
-exports[`toMatchApiMock() Should work with r2 module ~3~: [mockshot] [APISnap] [put /user/info r2-success] 1`] = `
-{
-  "httpMethod": "put",
-  "mock": {
-    "body": "{\\"hello\\":\\"world\\",\\"foo\\":\\"bar\\"}",
-    "statusCode": 200
-  },
-  "mockName": "r2-success",
-  "url": "/user/info"
 }
 `;

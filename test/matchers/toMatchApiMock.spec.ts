@@ -65,11 +65,17 @@ describe("toMatchApiMock()", () => {
     expect(data.url).toBe(path);
   });
 
-  it("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
-    const res = {
-      statttus: 200,
-      my_url: testUrl
-    };
-    await expect(res).not.toMatchApiMock("failure-unsupported-response");
+  it("Should use success mockName if none provided ~3~", async () => {
+    const path = "/login";
+    chai.use(chaiHttp);
+    const res = await chai
+      .request(testUrl)
+      .post(path + urlQuery)
+      .send();
+
+    expect(res).toMatchApiMock();
+    const { data } = getSnapshot("~3~");
+
+    expect(data.mockName).toBe("success");
   });
 });
