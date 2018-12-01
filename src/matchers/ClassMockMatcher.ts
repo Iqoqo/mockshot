@@ -6,27 +6,23 @@ export const ClassSnapshotTag = "[ClassSnap]";
 
 export interface ClassMatcher<R> {
   toMatchClassMock<T extends object, P extends keyof T>(
-    // mock: any,
     mockedClass: T,
     methodName: P,
     mockName?: string,
     ignoreFields?: string[]
   ): R;
   toMatchClassMock<T extends object, P extends keyof T>(
-    // mock: any,
     mockedClass: T,
     methodName: P,
     ignoreFields?: string[]
   ): R;
   toMatchClassMock(
-    // mock: any,
     className: string,
     methodName: string,
     mockName?: string,
     ignoreFields?: string[]
   ): R;
   toMatchClassMock(
-    // mock: any,
     className: string,
     methodName: string,
     ignoreFields?: string[]
