@@ -40,14 +40,6 @@ async function parse(response): Promise<IApiSnapDataBase> {
       url: getPathname(response.config.url),
       mock: { statusCode: response.status, body: response.data }
     };
-  } else if (response.response && response.opts && response.opts.method) {
-    // response is done with r2 library (https://github.com/mikeal/r2)
-    const res = await response.response;
-    return {
-      httpMethod: response.opts.method.toLowerCase(),
-      url: getPathname(res.url),
-      mock: { statusCode: res.status, body: await response.text }
-    };
   } else if (response.url && response.status) {
     // response is done with fetch library (https://www.npmjs.com/package/node-fetch)
     return {
@@ -64,10 +56,9 @@ async function parse(response): Promise<IApiSnapDataBase> {
     };
   } else {
     throw Error(
-      `The response is not supported, we're supporting only the usage of:
-            axios(https://www.npmjs.com/package/axios), r2(https://github.com/mikeal/r2) &
-            fetch(https://www.npmjs.com/package/node-fetch)
-            You can submit an issue on https://github.com/Iqoqo/mockshot/issues to add support for another library`
+      `The response is not supported.
+       we're supporting only the usage of: chai & axios
+       You can submit an issue on https://github.com/Iqoqo/mockshot/issues to add support for another library`
     );
   }
 }

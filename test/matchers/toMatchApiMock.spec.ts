@@ -65,32 +65,16 @@ describe("toMatchApiMock()", () => {
     expect(data.url).toBe(path);
   });
 
-  it("Should work with r2 module ~3~", async () => {
-    const path = "/user/info";
-    const res = await r2.put(testUrl + path + urlQuery);
-    const resp = await res.response;
-    console.log(resp);
-
-    await expect(res).toMatchApiMock("r2-success");
-    const { data } = getSnapshot("~3~");
-
-    // expect(data.mock.body).toEqual(returnedObject);
-    expect(data.mock.statusCode).toBe(200);
-    expect(data.httpMethod).toBe("put");
-    expect(data.mockName).toBe("r2-success");
-    expect(data.url).toBe(path);
+  it("Should work with fetch module", async () => {
+    const res = await fetch(testUrl);
+    await expect(res).toMatchApiMock("fetch-success");
   });
 
-  // it("Should work with fetch module", async () => {
-  //   const res = await fetch(testUrl);
-  //   await expect(res).toMatchApiMock("fetch-success");
-  // });
-
-  // it("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
-  //   const res = {
-  //     statttus: 200,
-  //     my_url: testUrl
-  //   };
-  //   await expect(res).not.toMatchApiMock("failure-unsupported-response");
-  // });
+  it.skip("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
+    const res = {
+      statttus: 200,
+      my_url: testUrl
+    };
+    await expect(res).not.toMatchApiMock("failure-unsupported-response");
+  });
 });
