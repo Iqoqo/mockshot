@@ -1,8 +1,5 @@
 import { IClassSnapshot } from "../../src/contracts";
-import {
-  noPackageName,
-  parseClassSnapshots
-} from "../../src/generators/parsers";
+import { parseClassSnapshots } from "../../src/generators/parsers";
 
 describe("parseClassSnapshots()", () => {
   it("should parse class snapshots into class tree", () => {

@@ -2,8 +2,6 @@ import { has, set } from "lodash";
 import path from "path";
 import { ClassMockTree, IClassSnapshot } from "../../contracts";
 
-export const noPackageName = Symbol("noPackageName");
-
 export function parseClassSnapshots(
   snapshots: IClassSnapshot[]
 ): ClassMockTree {
