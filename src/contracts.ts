@@ -33,3 +33,8 @@ export interface IApiSnapDataBase {
     error?: string;
   };
 }
+
+export type MatcherReturn = {
+  pass: boolean;
+  message(): string | (() => string);
+};

@@ -1,13 +1,8 @@
 import { cloneDeep, get, set } from "lodash";
 import { MockshotTag, Success } from "../constants";
-import { IClassSnapData } from "../contracts";
+import { IClassSnapData, MatcherReturn } from "../contracts";
 
 export const ClassSnapshotTag = "[ClassSnap]";
-
-type MatcherReturn = {
-  pass: boolean;
-  message(): string | (() => string);
-};
 
 export interface ClassMatcher<R> {
   toMatchClassMock<T extends object, P extends keyof T>(
@@ -39,12 +34,12 @@ export interface ClassMatcher<R> {
 }
 
 export function toMatchClassMock(
-  mock,
-  mockedClassOrClassName,
-  methodName,
-  mockNameOrIgnoreFields?,
-  maybeIgnoreFields?
-) {
+  mock: any,
+  mockedClassOrClassName: object | string,
+  methodName: string,
+  mockNameOrIgnoreFields?: string | string[],
+  maybeIgnoreFields?: string[]
+): MatcherReturn {
   const className: string =
     typeof mockedClassOrClassName === "string"
       ? mockedClassOrClassName
@@ -70,6 +65,7 @@ export function toMatchClassMock(
     ignoreFields
   );
 }
+
 function toMatchClassMockImplementation(
   self,
   mock,

@@ -1,36 +1,96 @@
-import "../../src/matchers";
 import axios from "axios";
+import adapter from "axios/lib/adapters/http";
+import chai from "chai";
+import chaiHttp from "chai-http";
+import http from "http";
 import r2 from "r2";
-const adapter = require("axios/lib/adapters/http");
+import "../../src";
+import { getOwnSnapshots } from "../utils";
 
-const testUrl = "http://www.example.com";
+const port = "8123";
+const testUrl = `http://localhost:${port}`;
+const returnedObject = { hello: "world", foo: "bar" };
+const urlQuery = "?abc=def";
+
+const app = new http.Server();
+
+app.on("request", (req, res) => {
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.write(JSON.stringify(returnedObject));
+  res.end();
+});
+
+const getSnapshot = key =>
+  getOwnSnapshots(__filename).find(snap => snap.key.includes(key));
 
 describe("toMatchApiMock()", () => {
-  it("Should work with axios module", async () => {
-    const res = await axios.get(testUrl, { adapter });
+  beforeAll(() => {
+    app.listen(port, () => {
+      console.log(`listening on port ${port}`);
+    });
+  });
+  afterAll(() => {
+    app.close();
+  });
+
+  it("Should work with axios module ~1~", async () => {
+    const path = "/users/123";
+    const res = await axios.get(testUrl + path + urlQuery, { adapter });
+
     expect(res).toMatchApiMock("axios-success");
+    const { data } = getSnapshot("~1~");
+
+    expect(data.mock.body).toEqual(returnedObject);
+    expect(data.mock.statusCode).toBe(200);
+    expect(data.httpMethod).toBe("get");
+    expect(data.mockName).toBe("axios-success");
+    expect(data.url).toBe(path);
   });
 
-  it("Should be rewritten (the test)", async () => {
-    const res = await axios.get(testUrl, { adapter });
-    expect(res).toMatchApiMock("axios-failure");
+  it("Should work with chai module ~2~", async () => {
+    const path = "/login";
+    chai.use(chaiHttp);
+    const res = await chai
+      .request(testUrl)
+      .post(path + urlQuery)
+      .send();
+
+    expect(res).toMatchApiMock("chai-success");
+    const { data } = getSnapshot("~2~");
+
+    expect(data.mock.body).toEqual(returnedObject);
+    expect(data.mock.statusCode).toBe(200);
+    expect(data.httpMethod).toBe("post");
+    expect(data.mockName).toBe("chai-success");
+    expect(data.url).toBe(path);
   });
 
-  it("Should work with r2 module", async () => {
-    const res = await r2.get(testUrl);
+  it("Should work with r2 module ~3~", async () => {
+    const path = "/user/info";
+    const res = await r2.put(testUrl + path + urlQuery);
+    const resp = await res.response;
+    console.log(resp);
+
     await expect(res).toMatchApiMock("r2-success");
+    const { data } = getSnapshot("~3~");
+
+    // expect(data.mock.body).toEqual(returnedObject);
+    expect(data.mock.statusCode).toBe(200);
+    expect(data.httpMethod).toBe("put");
+    expect(data.mockName).toBe("r2-success");
+    expect(data.url).toBe(path);
   });
 
-  it("Should work with fetch module", async () => {
-    const res = await fetch(testUrl);
-    await expect(res).toMatchApiMock("fetch-success");
-  });
+  // it("Should work with fetch module", async () => {
+  //   const res = await fetch(testUrl);
+  //   await expect(res).toMatchApiMock("fetch-success");
+  // });
 
-  it("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
-    const res = {
-      statttus: 200,
-      my_url: testUrl
-    };
-    await expect(res).not.toMatchApiMock("failure-unsupported-response");
-  });
+  // it("Should not work with unsupported response object (not of type axios, r2, fetch)", async () => {
+  //   const res = {
+  //     statttus: 200,
+  //     my_url: testUrl
+  //   };
+  //   await expect(res).not.toMatchApiMock("failure-unsupported-response");
+  // });
 });
