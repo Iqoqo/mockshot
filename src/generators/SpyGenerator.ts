@@ -1,26 +1,74 @@
-import { has, set } from "lodash";
-import { SourceFile } from "ts-simple-ast";
-import { IClassSnapData, IClassSnapshot, ISnapshot } from "../contracts";
+import { SourceFile, FileNotFoundError } from "ts-simple-ast";
+import { IClassSnapshot, ISnapshot, SingleClassMockTree } from "../contracts";
 import { ClassSnapshotTag } from "../matchers/ClassMockMatcher";
 import { MockGenerator } from "./base";
+import { parseClassSnapshots } from "./parsers";
 
 export class ClassSpyGenerator extends MockGenerator {
   generate(
     getFile: (filename: string) => SourceFile,
     allSnapshots: ISnapshot[]
   ) {
-    classTree
+    const classSnapshots = this.filterSnapshots(allSnapshots);
+    const tree = parseClassSnapshots(classSnapshots);
   }
 
-  filterSnapshots(allSnapshots: ISnapshot[]): IClassSnapshot[] {
+  private filterSnapshots(allSnapshots: ISnapshot[]): IClassSnapshot[] {
     return allSnapshots.filter(snap => snap.key.includes(ClassSnapshotTag));
   }
 
+  private writeSpy(
+    file: SourceFile,
+    className: string,
+    classTree: SingleClassMockTree
+  ) {
+    this.writeMockshotMockInterface(file);
+    this.writeSpyInterface(file, className, classTree);
+  }
+
+  private writeMockshotMockInterface(file: SourceFile) {
+    file.addInterface({
+      name: "MockshotMock<P, T = {}>",
+      extends: ["jest.Mock"],
+      properties: [
+        { name: "give", type: "(mockName: P) => jest.Mock<T>" },
+        { name: "giveOnce", type: "(mockName: P) => jest.Mock<T>" }
+      ]
+    });
+  }
+
+  private writeSpyInterface(
+    file: SourceFile,
+    className: string,
+    classTree: SingleClassMockTree
+  ) {
+    file.addInterface({
+      name: `${className}Spy`,
+      properties: this.getMethodsTypes(classTree)
+    });
+  }
+
+  private getMethodsTypes(classTree: SingleClassMockTree) {
+    return Object.keys(classTree).map(methodName => {
+      const methodTree = classTree[methodName];
+      const methodArgUnionType = this.getMethodArgUnionType(methodTree);
+      return { name: methodName, type: `MockshotMock<${methodArgUnionType}>` };
+    });
+  }
+
+  private getMethodArgUnionType(methodTree: { [mockName: string]: any }) {
+    return Object.keys(methodTree)
+      .map(mockName => `"${mockName}"`)
+      .join(" | ");
+  }
 }
 
 interface MockshotMock<P, T = {}> extends jest.Mock {
-  give(mockName: P): jest.Mock<T>;
-  giveOnce(mockName: P): jest.Mock<T>;
+  give: (mockName: P) => jest.Mock<T>;
+  giveOnce: (mockName: P) => jest.Mock<T>;
+}
+interface JobActionsServiceSpy {
+  duplicateJob: MockshotMock<"success" | "fail">;
 }
 
 function getSpy<P extends string>(methodName) {
@@ -36,9 +84,7 @@ function getSpy<P extends string>(methodName) {
   return newSpy;
 }
 
-export const jobActionsServiceSpy: {
-  duplicateJob: MockshotMock<"success" | "fail">;
-} = {
+export const jobActionsServiceSpy: JobActionsServiceSpy = {
   duplicateJob: getSpy("duplicateJob")
 };
 
