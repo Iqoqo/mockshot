@@ -41,8 +41,16 @@ export class ClassSpyGenerator extends MockGenerator {
       name: "MockshotMock<P, T = {}>",
       extends: ["jest.Mock"],
       properties: [
-        { name: "give", type: "(mockName: P) => jest.Mock<T>" },
-        { name: "giveOnce", type: "(mockName: P) => jest.Mock<T>" }
+        { name: "mockImplementation(mockName: P)", type: "jest.Mock<T>" },
+        {
+          name: "mockImplementation(fn: (...args: any[]) => any)",
+          type: "jest.Mock<T>"
+        },
+        { name: "mockImplementationOnce(mockName: P)", type: "jest.Mock<T>" },
+        {
+          name: "mockImplementationOnce(fn: (...args: any[]) => any)",
+          type: "jest.Mock<T>"
+        }
       ]
     });
   }
@@ -76,15 +84,18 @@ export class ClassSpyGenerator extends MockGenerator {
           "const getMock = mockName => classTree[methodName][mockName].mock;"
         );
         writer.writeLine(
-          "newSpy.give = mockName => newSpy.mockImplementation("
+          "const { mockImplementation, mockImplementationOnce } = newSpy;"
         );
-        writer.writeLine("    () => getMock(mockName)");
-        writer.writeLine(");");
+        writer.writeLine("newSpy.mockImplementation = mockName =>");
+        writer.writeLine('  typeof mockName === "string"');
+        writer.writeLine("    ? mockImplementation(() => getMock(mockName))");
+        writer.writeLine("    : mockImplementation(mockName);");
+        writer.writeLine("newSpy.mockImplementationOnce = mockName =>");
+        writer.writeLine('  typeof mockName === "string"');
         writer.writeLine(
-          "newSpy.giveOnce = mockName => newSpy.mockImplementationOnce("
+          "    ? mockImplementationOnce(() => getMock(mockName))"
         );
-        writer.writeLine("    () => getMock(mockName)");
-        writer.writeLine(");");
+        writer.writeLine("    : mockImplementationOnce(mockName);");
         writer.writeLine("return newSpy;");
       }
     });

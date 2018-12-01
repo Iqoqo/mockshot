@@ -1,5 +1,5 @@
-import Project from "ts-simple-ast";
 import path from "path";
+import Project from "ts-simple-ast";
 import { ClassSpyGenerator } from "../../src/generators/SpyGenerator";
 
 describe("SpyGenerator", () => {
