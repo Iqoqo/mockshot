@@ -12,6 +12,12 @@ export class ClassSpyGenerator extends MockGenerator {
   ) {
     const classSnapshots = this.filterSnapshots(allSnapshots);
     const tree = parseClassSnapshots(classSnapshots);
+
+    Object.keys(tree).forEach(filePath => {
+      const file = getFile(filePath);
+      const { className, classContent } = tree[filePath];
+      this.writeSpy(file, className, classContent);
+    });
   }
 
   private filterSnapshots(allSnapshots: ISnapshot[]): IClassSnapshot[] {
