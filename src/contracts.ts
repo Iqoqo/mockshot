@@ -33,3 +33,16 @@ export interface IApiSnapDataBase {
     error?: string;
   };
 }
+
+export type ClassMockTree = {
+  [packageName: string]: {
+    [className: string]: {
+      [methodName: string]: {
+        [mockName: string]: {
+          mock: any;
+          meta: { key: string; originFile: string };
+        };
+      };
+    };
+  };
+};
