@@ -34,6 +34,11 @@ export interface IApiSnapDataBase {
   };
 }
 
+export type MatcherReturn = {
+  pass: boolean;
+  message(): string | (() => string);
+};
+
 export type ClassMockTree = {
   [mockPath: string]: {
     className: string;

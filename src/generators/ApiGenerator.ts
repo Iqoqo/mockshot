@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { has, includes } from "lodash";
 import { CodeBlockWriter, SourceFile } from "ts-simple-ast";
 import util from "util";
 import { IApiSnapData, IApiSnapshot, ISnapshot } from "../contracts";
@@ -15,7 +15,7 @@ export class ApiGenerator extends MockGenerator {
     allSnapshots: ISnapshot[]
   ) {
     const snapshots = allSnapshots.filter(snap =>
-      _.includes(snap.key, ApiSnapshotTag)
+      snap.key.includes(ApiSnapshotTag)
     ) as IApiSnapshot[];
     const parsed = this.parse(snapshots);
     const fileDeclaration = getFile("API.ts");
@@ -81,10 +81,10 @@ export class ApiGenerator extends MockGenerator {
   }
 
   private fillMissingPath(snap: IApiSnapData): void {
-    if (!_.has(this.parsed, snap.httpMethod)) {
+    if (!has(this.parsed, snap.httpMethod)) {
       this.parsed[snap.httpMethod] = {};
     }
-    if (!_.has(this.parsed[snap.httpMethod], snap.url)) {
+    if (!has(this.parsed[snap.httpMethod], snap.url)) {
       this.parsed[snap.httpMethod][snap.url] = {};
     }
   }
@@ -96,7 +96,7 @@ export class ApiGenerator extends MockGenerator {
       this.validate(snapshot);
       this.fillMissingPath(snap);
 
-      if (_.has(this.parsed[snap.httpMethod][snap.url], snap.mockName)) {
+      if (has(this.parsed[snap.httpMethod][snap.url], snap.mockName)) {
         throw Error(
           `Snapshot duplication: snapshot with the same httpMethod, URL and mockName already exists '${
             snapshot.key
@@ -110,7 +110,7 @@ export class ApiGenerator extends MockGenerator {
   }
 
   private isHttpMethodValid(method: string): boolean {
-    return _.includes(["post", "get", "put", "delete", "patch"], method);
+    return includes(["post", "get", "put", "delete", "patch"], method);
   }
 
   private getSwitchStatement(

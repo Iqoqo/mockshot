@@ -1,5 +1,4 @@
 import stringify from "json-stable-stringify";
-import _ from "lodash";
 import path from "path";
 import { SourceFile } from "ts-simple-ast";
 import { IClassSnapData, IClassSnapshot, ISnapshot } from "../contracts";
@@ -14,7 +13,7 @@ export class ClassGenerator extends MockGenerator {
     allSnapshots: ISnapshot[]
   ) {
     const snapshots = allSnapshots.filter(snap =>
-      _.includes(snap.key, ClassSnapshotTag)
+      snap.key.includes(ClassSnapshotTag)
     ) as IClassSnapshot[];
     snapshots.forEach(snap =>
       this.parseSingleMock(snap.data, snap.packageName)

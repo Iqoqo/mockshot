@@ -16,7 +16,7 @@
     "no-return-await": true,
     "no-unnecessary-callback-wrapper": true,
     "object-literal-shorthand": true,
-    "no-implicit-dependencies": true,
+    "no-implicit-dependencies": [true, "dev"],
     "member-ordering": [true, { "order": "fields-first" }]
   },
   "rulesDirectory": []
