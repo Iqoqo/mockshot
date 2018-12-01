@@ -4,14 +4,12 @@ import { IClassSnapData, IClassSnapshot, ISnapshot } from "../contracts";
 import { ClassSnapshotTag } from "../matchers/ClassMockMatcher";
 import { MockGenerator } from "./base";
 
-
-
 export class ClassSpyGenerator extends MockGenerator {
   generate(
     getFile: (filename: string) => SourceFile,
     allSnapshots: ISnapshot[]
   ) {
-    console.log("implement");
+    classTree
   }
 
   filterSnapshots(allSnapshots: ISnapshot[]): IClassSnapshot[] {

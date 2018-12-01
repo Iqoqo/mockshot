@@ -1,5 +1,8 @@
 import { IClassSnapshot } from "../../src/contracts";
-import { noPackageName, parseClassSnapshots } from "../../src/generators/parsers";
+import {
+  noPackageName,
+  parseClassSnapshots
+} from "../../src/generators/parsers";
 
 describe("parseClassSnapshots()", () => {
   it("should parse class snapshots into class tree", () => {
@@ -41,44 +44,6 @@ describe("parseClassSnapshots()", () => {
     );
   });
 });
-
-const parseTreeResult = {
-  mockshot: {
-    UserService: {
-      getUser: {
-        fail: {
-          meta: {
-            key:
-              "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
-            originFile:
-              "/projects/mockshot/test/__snapshots__/index.spec.ts.snap"
-          },
-          mock: "user could not be found"
-        },
-        success: {
-          meta: {
-            key:
-              "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
-            originFile:
-              "/projects/mockshot/test/__snapshots__/index.spec.ts.snap"
-          },
-          mock: { email: "john@google.com", userName: "john" }
-        }
-      },
-      getUsers: {
-        success: {
-          meta: {
-            key:
-              "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
-            originFile:
-              "/projects/mockshot/test/__snapshots__/index.spec.ts.snap"
-          },
-          mock: [{ email: "john@google.com", userName: "john" }]
-        }
-      }
-    }
-  }
-};
 
 const mockSnapObjectA = {
   key: "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
@@ -139,8 +104,46 @@ const mockSnapObjectNoPackage = {
   }
 };
 
+const parseTreeResult = {
+  "mockshot/UserService.ts": {
+    UserService: {
+      getUser: {
+        fail: {
+          meta: {
+            key:
+              "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
+            originFile:
+              "/projects/mockshot/test/__snapshots__/index.spec.ts.snap"
+          },
+          mock: "user could not be found"
+        },
+        success: {
+          meta: {
+            key:
+              "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
+            originFile:
+              "/projects/mockshot/test/__snapshots__/index.spec.ts.snap"
+          },
+          mock: { email: "john@google.com", userName: "john" }
+        }
+      },
+      getUsers: {
+        success: {
+          meta: {
+            key:
+              "Class mock: [mockshot] [ClassSnap] [[TestClass getSomeObject ok]] 1",
+            originFile:
+              "/projects/mockshot/test/__snapshots__/index.spec.ts.snap"
+          },
+          mock: [{ email: "john@google.com", userName: "john" }]
+        }
+      }
+    }
+  }
+};
+
 const parseNoPackageNameResult = {
-  mockshot: {
+  "mockshot/UserService.ts": {
     UserService: {
       getUser: {
         success: {
@@ -155,7 +158,7 @@ const parseNoPackageNameResult = {
       }
     }
   },
-  [noPackageName]: {
+  "UserService.ts": {
     UserService: {
       getUser: {
         success: {
@@ -173,7 +176,7 @@ const parseNoPackageNameResult = {
 };
 
 const paseFromDifferentPackagesResult = {
-  mockshot: {
+  "mockshot/UserService.ts": {
     UserService: {
       getUser: {
         success: {
@@ -188,7 +191,7 @@ const paseFromDifferentPackagesResult = {
       }
     }
   },
-  jest: {
+  "jest/UserService.ts": {
     UserService: {
       getUser: {
         success: {
