@@ -32,12 +32,7 @@ export class ClassSpyGenerator extends MockGenerator {
     this.writeMockshotMockInterface(file);
     this.writeSpyInterface(file, className, classTree);
     this.writeClassTree(file, classTree);
-
-    file.addFunction({
-      name: "getSpy<P extends string>",
-      parameters: [{ name: "methodName", type: "string" }],
-      returnType: "MockshotMock<P>"
-    });
+    this.writeGetSpyFunction(file);
   }
 
   private writeMockshotMockInterface(file: SourceFile) {
@@ -66,6 +61,30 @@ export class ClassSpyGenerator extends MockGenerator {
     file.addVariableStatement({
       declarationKind: VariableDeclarationKind.Const,
       declarations: [{ name: "classTree", initializer: stringify(classTree) }]
+    });
+  }
+
+  private writeGetSpyFunction(file: SourceFile) {
+    file.addFunction({
+      name: "getSpy<P extends string>",
+      parameters: [{ name: "methodName", type: "string" }],
+      returnType: "MockshotMock<P>",
+      bodyText: writer => {
+        writer.writeLine("const newSpy = jest.fn() as MockshotMock<P>;");
+        writer.writeLine(
+          "const getMock = mockName => classTree[methodName][mockName].mock"
+        );
+        writer.writeLine(
+          "newSpy.give = mockName => newSpy.mockImplementation("
+        );
+        writer.writeLine("    () => getMock(mockName)");
+        writer.writeLine(");");
+        writer.writeLine(
+          "newSpy.giveOnce = mockName => newSpy.mockImplementationOnce("
+        );
+        writer.writeLine("    () => getMock(mockName)");
+        writer.writeLine(");");
+      }
     });
   }
 
