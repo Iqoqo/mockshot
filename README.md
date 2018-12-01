@@ -1,4 +1,4 @@
-# Mockshot
+# Mockshot &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Iqoqo/mockshot/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/mockshot.svg?style=flat)](https://www.npmjs.com/package/mockshot) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 A mocking framework which generates mocks from your snapshot tests.
 
@@ -73,13 +73,3 @@ it("Should work with fetch module", async () => {
 ```
 
 `toMatchApiMock` mocks a response received from [fetch](https://www.npmjs.com/package/node-fetch) module, with a 'success' as its mock name.
-
-## Restrictions
-
-MockShot currently supports these three different http libraries -
-
-* [axios](https://www.npmjs.com/package/axios)
-* [fetch](https://www.npmjs.com/package/node-fetch)
-* [r2](https://github.com/mikeal/r2)
-
-Please [add an issue](https://github.com/Iqoqo/Mockshot/issues/new) in case you'd like to use a different module.
