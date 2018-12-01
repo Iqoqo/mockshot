@@ -33,6 +33,7 @@ export class ClassSpyGenerator extends MockGenerator {
     this.writeSpyInterface(file, className, classTree);
     this.writeClassTree(file, classTree);
     this.writeGetSpyFunction(file);
+    this.writeClassSpy(file, className, classTree);
   }
 
   private writeMockshotMockInterface(file: SourceFile) {
@@ -72,7 +73,7 @@ export class ClassSpyGenerator extends MockGenerator {
       bodyText: writer => {
         writer.writeLine("const newSpy = jest.fn() as MockshotMock<P>;");
         writer.writeLine(
-          "const getMock = mockName => classTree[methodName][mockName].mock"
+          "const getMock = mockName => classTree[methodName][mockName].mock;"
         );
         writer.writeLine(
           "newSpy.give = mockName => newSpy.mockImplementation("
@@ -84,7 +85,32 @@ export class ClassSpyGenerator extends MockGenerator {
         );
         writer.writeLine("    () => getMock(mockName)");
         writer.writeLine(");");
+        writer.writeLine("return newSpy;");
       }
+    });
+  }
+
+  private writeClassSpy(
+    file: SourceFile,
+    className: string,
+    classTree: SingleClassMockTree
+  ) {
+    file.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      isExported: true,
+      declarations: [
+        {
+          name: this.getSpyClassName(className),
+          type: this.getSpyInterfaceName(className),
+          initializer: writer => {
+            writer.writeLine("{");
+            Object.keys(classTree).map(methodName =>
+              writer.writeLine(`    ${methodName}: getSpy("${methodName}"),`)
+            );
+            writer.writeLine("}");
+          }
+        }
+      ]
     });
   }
 
@@ -96,37 +122,19 @@ export class ClassSpyGenerator extends MockGenerator {
     });
   }
 
-  private getMethodArgUnionType(methodTree: { [mockName: string]: any }) {
+  private getMethodArgUnionType(methodTree: {
+    [mockName: string]: any;
+  }): string {
     return Object.keys(methodTree)
       .map(mockName => `"${mockName}"`)
       .join(" | ");
   }
-}
 
-interface MockshotMock<P, T = {}> extends jest.Mock {
-  give: (mockName: P) => jest.Mock<T>;
-  giveOnce: (mockName: P) => jest.Mock<T>;
-}
-interface JobActionsServiceSpy {
-  duplicateJob: MockshotMock<"success" | "fail">;
-}
+  private getSpyInterfaceName(className: string): string {
+    return className + "Spy";
+  }
 
-function getSpy<P extends string>(methodName) {
-  const newSpy = jest.fn() as MockshotMock<P>;
-  newSpy.give = mockName =>
-    newSpy.mockImplementation(() =>
-      JobActionsServiceMocks[methodName](mockName)
-    );
-  newSpy.giveOnce = mockName =>
-    newSpy.mockImplementationOnce(() =>
-      JobActionsServiceMocks[methodName](mockName)
-    );
-  return newSpy;
+  private getSpyClassName(className: string): string {
+    return className.charAt(0).toLowerCase() + className.slice(1) + "Spy";
+  }
 }
-
-export const jobActionsServiceSpy: JobActionsServiceSpy = {
-  duplicateJob: getSpy("duplicateJob")
-};
-
-jobActionsServiceSpy.duplicateJob.give("success");
-jobActionsServiceSpy.duplicateJob.giveOnce("fail");
