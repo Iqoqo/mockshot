@@ -3,7 +3,6 @@ import adapter from "axios/lib/adapters/http";
 import chai from "chai";
 import chaiHttp from "chai-http";
 import http from "http";
-import r2 from "r2";
 import "../../src";
 import { getOwnSnapshots } from "../utils";
 
