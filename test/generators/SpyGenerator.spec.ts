@@ -14,7 +14,7 @@ describe("SpyGenerator", () => {
     generator = new ClassSpyGenerator();
   });
 
-  it("should work", () => {
+  it.skip("should work", () => {
     const snapshots = [mockSnapObjectA, mockSnapObjectB, mockSnapObjectC];
     const fileDecleration = generator.generate(getFile, snapshots);
     project.saveSync();
