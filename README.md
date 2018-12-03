@@ -1,7 +1,7 @@
 <div align="center">
 <img alt="Mockshot" src="./public/img/mockshot.png" width=500/>
 
-### Automatic mocks generation based on snapshot testing
+### Automatic mocks generation from snapshot tests
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Iqoqo/mockshot/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/mockshot.svg?style=flat)](https://www.npmjs.com/package/mockshot) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 </div>
@@ -10,16 +10,16 @@
 
 Imagine you could: 
 
-1. Have a guarantee that your mocks are always valid
-2. Never manually write a mock again
+1. Never manually write a mock again
+2. Have a guarantee that your mocks are always valid
 
 Mockshot give you these superpowers, and more. 
 
 ## Overview
 
-Mockshot utilizes the artifacts of snapshot tests to generate mocks. The flow can be summarized:
+[Snapshot testing](https://jestjs.io/docs/en/snapshot-testing) may commonly be known for UI testing, but the mechanism itself can be used to test the shape of any object. Mockshot utilizes the artifacts of snapshot tests to generate mocks. The flow can be summarized:
 
-1. Write a [snapshot test](https://jestjs.io/docs/en/snapshot-testing) for a method. 
+1. Write a Jest snapshot test for a method. 
 2. Use the snapshot's output as blueprints for generating a mock.
 3. Let other methods use that mock in their tests. 
 
@@ -126,6 +126,22 @@ describe("UsingSomeClass", () => {
 })
 
 ```
+## Key Features
+
+1. Mock any Javascript object using custom matchers.
+2. Special matchers for API responses for generating server mocks. 
+3. Mocks are using Typescript for enhanced auto-complete. 
+4. Special generators for class mocks, API server mocks and more.
+
+# Mockshot, In Depth
+
+## Introduction
+
+## Matchers
+
+Matchers are the assert methods used during the test to generate the mock blueprints. They serialize the object and prepare its shape. 
+
+
 ## Contents
 
 * [Introduction](#introduction)
@@ -135,6 +151,9 @@ describe("UsingSomeClass", () => {
   * [Class mock](#class-mocks)
   * [Endpoints api mock](#endpoint-api-mocks)
 * [Restrictions](#restrictions)
+
+# How does it work
+
 
 ## <a name=introduction>Introduction
 
