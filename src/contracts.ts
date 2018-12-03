@@ -33,3 +33,24 @@ export interface IApiSnapDataBase {
     error?: string;
   };
 }
+
+export type MatcherReturn = {
+  pass: boolean;
+  message(): string | (() => string);
+};
+
+export type ClassMockTree = {
+  [mockPath: string]: {
+    className: string;
+    classContent: SingleClassMockTree;
+  };
+};
+
+export type SingleClassMockTree = {
+  [methodName: string]: {
+    [mockName: string]: {
+      mock: any;
+      meta: { key: string; originFile: string };
+    };
+  };
+};

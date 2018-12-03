@@ -1,8 +1,32 @@
-import { IApiSnapData, IApiSnapDataBase } from "../contracts";
+import url from "url";
+import { MockshotTag, Success } from "../constants";
+import { IApiSnapData, IApiSnapDataBase, MatcherReturn } from "../contracts";
 
 export const ApiSnapshotTag = "[APISnap]";
 
-async function parse(response): Promise<IApiSnapDataBase> {
+export function toMatchApiMock(
+  response,
+  mockName: string = Success
+): MatcherReturn {
+  let parsedResponse: IApiSnapDataBase;
+  try {
+    parsedResponse = parse(response);
+  } catch (err) {
+    return { pass: false, message: () => err.message };
+  }
+
+  const snapshot: IApiSnapData = { mockName, ...parsedResponse };
+  const snapshotTag = `${MockshotTag} ${ApiSnapshotTag} [${
+    parsedResponse.httpMethod
+  } ${parsedResponse.url} ${mockName}]`;
+
+  return {
+    pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag),
+    message: () => `expected ${snapshot} to match tag ${snapshotTag}`
+  };
+}
+
+function parse(response): IApiSnapDataBase {
   if (
     response.config &&
     response.config.method &&
@@ -13,56 +37,29 @@ async function parse(response): Promise<IApiSnapDataBase> {
     // response is done with axios library (https://www.npmjs.com/package/axios)
     return {
       httpMethod: response.config.method.toLowerCase(),
-      url: response.config.url,
+      url: getPathname(response.config.url),
       mock: { statusCode: response.status, body: response.data }
-    };
-  } else if (response.response && response.opts && response.opts.method) {
-    // response is done with r2 library (https://github.com/mikeal/r2)
-    const res = await response.response;
-    return {
-      httpMethod: response.opts.method.toLowerCase(),
-      url: res.url,
-      mock: { statusCode: res.status, body: await response.text }
-    };
-  } else if (response.url && response.status) {
-    // response is done with fetch library (https://www.npmjs.com/package/node-fetch)
-    return {
-      httpMethod: response.method || "get", // this doesn't work
-      url: response.url,
-      mock: { statusCode: response.status, body: await response.text() }
     };
   } else if (response.status && response.req && response.req.method) {
     // response is done with chai library (https://www.google.it.on.your/own)
     return {
       httpMethod: response.req.method.toLowerCase(),
-      url: response.req.path,
+      url: getPathname(response.request.url),
       mock: { statusCode: response.status, body: response.body }
     };
   } else {
     throw Error(
-      `The response is not supported, we're supporting only the usage of:
-            axios(https://www.npmjs.com/package/axios), r2(https://github.com/mikeal/r2) &
-            fetch(https://www.npmjs.com/package/node-fetch)
-            You can submit an issue on https://github.com/Iqoqo/mockshot/issues to add support for another library`
+      `The response type is not supported.
+       we're supporting only the usage of: chai & axios.
+       You can submit an issue on https://github.com/iqoqo/mockshot/issues to add support for another library`
     );
   }
 }
 
-export async function toMatchApiMock(response, mockName: string) {
-  let parsedResponse: IApiSnapDataBase;
-  try {
-    parsedResponse = await parse(response);
-  } catch (err) {
-    return { pass: false, message: () => err.message };
+function getPathname(responseUrl: string): string {
+  const pathname = url.parse(responseUrl).pathname;
+  if (pathname === undefined) {
+    throw new Error(`could not parse path name for url ${responseUrl}`);
   }
-
-  const snapshot: IApiSnapData = { mockName, ...parsedResponse };
-  const snapshotTag = `[mockshot] ${ApiSnapshotTag} [${
-    parsedResponse.httpMethod
-  } ${parsedResponse.url} ${mockName}]`;
-
-  return {
-    pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag),
-    message: () => `expected ${snapshot} to match tag ${snapshotTag}`
-  };
+  return pathname;
 }

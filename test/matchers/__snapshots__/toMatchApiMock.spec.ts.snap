@@ -1,49 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toMatchApiMock() Should be rewritten (the test): [mockshot] [APISnap] [get http://www.example.com axios-failure] 1`] = `
+exports[`toMatchApiMock() Should use success mockName if none provided ~3~: [mockshot] [APISnap] [post /login success] 1`] = `
 {
-  "httpMethod": "get",
+  "httpMethod": "post",
   "mock": {
-    "body": "<!doctype html>\\n<html>\\n<head>\\n    <title>Example Domain</title>\\n\\n    <meta charset=\\"utf-8\\" />\\n    <meta http-equiv=\\"Content-type\\" content=\\"text/html; charset=utf-8\\" />\\n    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\" />\\n    <style type=\\"text/css\\">\\n    body {\\n        background-color: #f0f0f2;\\n        margin: 0;\\n        padding: 0;\\n        font-family: \\"Open Sans\\", \\"Helvetica Neue\\", Helvetica, Arial, sans-serif;\\n        \\n    }\\n    div {\\n        width: 600px;\\n        margin: 5em auto;\\n        padding: 50px;\\n        background-color: #fff;\\n        border-radius: 1em;\\n    }\\n    a:link, a:visited {\\n        color: #38488f;\\n        text-decoration: none;\\n    }\\n    @media (max-width: 700px) {\\n        body {\\n            background-color: #fff;\\n        }\\n        div {\\n            width: auto;\\n            margin: 0 auto;\\n            border-radius: 0;\\n            padding: 1em;\\n        }\\n    }\\n    </style>    \\n</head>\\n\\n<body>\\n<div>\\n    <h1>Example Domain</h1>\\n    <p>This domain is established to be used for illustrative examples in documents. You may use this\\n    domain in examples without prior coordination or asking for permission.</p>\\n    <p><a href=\\"http://www.iana.org/domains/example\\">More information...</a></p>\\n</div>\\n</body>\\n</html>\\n",
+    "body": {
+      "foo": "bar",
+      "hello": "world"
+    },
     "statusCode": 200
   },
-  "mockName": "axios-failure",
-  "url": "http://www.example.com"
+  "mockName": "success",
+  "url": "/login"
 }
 `;
 
-exports[`toMatchApiMock() Should work with axios module: [mockshot] [APISnap] [get http://www.example.com axios-success] 1`] = `
+exports[`toMatchApiMock() Should work with axios module ~1~: [mockshot] [APISnap] [get /users/123 axios-success] 1`] = `
 {
   "httpMethod": "get",
   "mock": {
-    "body": "<!doctype html>\\n<html>\\n<head>\\n    <title>Example Domain</title>\\n\\n    <meta charset=\\"utf-8\\" />\\n    <meta http-equiv=\\"Content-type\\" content=\\"text/html; charset=utf-8\\" />\\n    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\" />\\n    <style type=\\"text/css\\">\\n    body {\\n        background-color: #f0f0f2;\\n        margin: 0;\\n        padding: 0;\\n        font-family: \\"Open Sans\\", \\"Helvetica Neue\\", Helvetica, Arial, sans-serif;\\n        \\n    }\\n    div {\\n        width: 600px;\\n        margin: 5em auto;\\n        padding: 50px;\\n        background-color: #fff;\\n        border-radius: 1em;\\n    }\\n    a:link, a:visited {\\n        color: #38488f;\\n        text-decoration: none;\\n    }\\n    @media (max-width: 700px) {\\n        body {\\n            background-color: #fff;\\n        }\\n        div {\\n            width: auto;\\n            margin: 0 auto;\\n            border-radius: 0;\\n            padding: 1em;\\n        }\\n    }\\n    </style>    \\n</head>\\n\\n<body>\\n<div>\\n    <h1>Example Domain</h1>\\n    <p>This domain is established to be used for illustrative examples in documents. You may use this\\n    domain in examples without prior coordination or asking for permission.</p>\\n    <p><a href=\\"http://www.iana.org/domains/example\\">More information...</a></p>\\n</div>\\n</body>\\n</html>\\n",
+    "body": {
+      "foo": "bar",
+      "hello": "world"
+    },
     "statusCode": 200
   },
   "mockName": "axios-success",
-  "url": "http://www.example.com"
+  "url": "/users/123"
 }
 `;
 
-exports[`toMatchApiMock() Should work with fetch module: [mockshot] [APISnap] [get http://www.example.com/ fetch-success] 1`] = `
+exports[`toMatchApiMock() Should work with chai module ~2~: [mockshot] [APISnap] [post /login chai-success] 1`] = `
 {
-  "httpMethod": "get",
+  "httpMethod": "post",
   "mock": {
-    "body": "<!doctype html>\\n<html>\\n<head>\\n    <title>Example Domain</title>\\n\\n    <meta charset=\\"utf-8\\" />\\n    <meta http-equiv=\\"Content-type\\" content=\\"text/html; charset=utf-8\\" />\\n    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\" />\\n    <style type=\\"text/css\\">\\n    body {\\n        background-color: #f0f0f2;\\n        margin: 0;\\n        padding: 0;\\n        font-family: \\"Open Sans\\", \\"Helvetica Neue\\", Helvetica, Arial, sans-serif;\\n        \\n    }\\n    div {\\n        width: 600px;\\n        margin: 5em auto;\\n        padding: 50px;\\n        background-color: #fff;\\n        border-radius: 1em;\\n    }\\n    a:link, a:visited {\\n        color: #38488f;\\n        text-decoration: none;\\n    }\\n    @media (max-width: 700px) {\\n        body {\\n            background-color: #fff;\\n        }\\n        div {\\n            width: auto;\\n            margin: 0 auto;\\n            border-radius: 0;\\n            padding: 1em;\\n        }\\n    }\\n    </style>    \\n</head>\\n\\n<body>\\n<div>\\n    <h1>Example Domain</h1>\\n    <p>This domain is established to be used for illustrative examples in documents. You may use this\\n    domain in examples without prior coordination or asking for permission.</p>\\n    <p><a href=\\"http://www.iana.org/domains/example\\">More information...</a></p>\\n</div>\\n</body>\\n</html>\\n",
+    "body": {
+      "foo": "bar",
+      "hello": "world"
+    },
     "statusCode": 200
   },
-  "mockName": "fetch-success",
-  "url": "http://www.example.com/"
-}
-`;
-
-exports[`toMatchApiMock() Should work with r2 module: [mockshot] [APISnap] [get http://www.example.com/ r2-success] 1`] = `
-{
-  "httpMethod": "get",
-  "mock": {
-    "body": "<!doctype html>\\n<html>\\n<head>\\n    <title>Example Domain</title>\\n\\n    <meta charset=\\"utf-8\\" />\\n    <meta http-equiv=\\"Content-type\\" content=\\"text/html; charset=utf-8\\" />\\n    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\" />\\n    <style type=\\"text/css\\">\\n    body {\\n        background-color: #f0f0f2;\\n        margin: 0;\\n        padding: 0;\\n        font-family: \\"Open Sans\\", \\"Helvetica Neue\\", Helvetica, Arial, sans-serif;\\n        \\n    }\\n    div {\\n        width: 600px;\\n        margin: 5em auto;\\n        padding: 50px;\\n        background-color: #fff;\\n        border-radius: 1em;\\n    }\\n    a:link, a:visited {\\n        color: #38488f;\\n        text-decoration: none;\\n    }\\n    @media (max-width: 700px) {\\n        body {\\n            background-color: #fff;\\n        }\\n        div {\\n            width: auto;\\n            margin: 0 auto;\\n            border-radius: 0;\\n            padding: 1em;\\n        }\\n    }\\n    </style>    \\n</head>\\n\\n<body>\\n<div>\\n    <h1>Example Domain</h1>\\n    <p>This domain is established to be used for illustrative examples in documents. You may use this\\n    domain in examples without prior coordination or asking for permission.</p>\\n    <p><a href=\\"http://www.iana.org/domains/example\\">More information...</a></p>\\n</div>\\n</body>\\n</html>\\n",
-    "statusCode": 200
-  },
-  "mockName": "r2-success",
-  "url": "http://www.example.com/"
+  "mockName": "chai-success",
+  "url": "/login"
 }
 `;
