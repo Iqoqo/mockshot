@@ -51,6 +51,10 @@ export class ClassSpyGenerator extends MockGenerator {
         {
           name: "mockImplementationOnce(fn: (...args: any[]) => any)",
           type: "jest.Mock<T>"
+        },
+        {
+          name: "getMock(mockName: P)",
+          type: "any"
         }
       ]
     });
@@ -97,6 +101,7 @@ export class ClassSpyGenerator extends MockGenerator {
           "    ? mockImplementationOnce(() => getMock(mockName))"
         );
         writer.writeLine("    : mockImplementationOnce(mockName);");
+        writer.writeLine("newSpy.getMock = getMock;")
         writer.writeLine("return newSpy;");
       }
     });

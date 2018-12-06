@@ -26,8 +26,11 @@ export class GeneratorRunner {
   };
 
   private createSourceFile = (mockFileName: string): SourceFile => {
-    fs.unlinkSync(path.join(this.outDir, mockFileName));
-    console.log("File exists", mockFileName, "removing...");
-    return this.project.createSourceFile(path.join(this.outDir, mockFileName));
+    const filePath = path.join(this.outDir, mockFileName);
+    if (fs.existsSync(filePath)) {
+      console.log("File exists", mockFileName, "removing...");
+      fs.unlinkSync(filePath);
+    }
+    return this.project.createSourceFile(filePath);
   };
 }
