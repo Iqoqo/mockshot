@@ -1,6 +1,8 @@
 import { has, set } from "lodash";
 import path from "path";
+
 import { ClassMockTree, IClassSnapshot } from "../../contracts";
+import { getSafePackageName } from "../../utils";
 
 export function parseClassSnapshots(
   snapshots: IClassSnapshot[]
@@ -32,6 +34,6 @@ function addSingleSnapshot(
 }
 
 function getFilePath(snap: IClassSnapshot): string {
-  const packageName = snap.packageName || "";
+  const packageName = snap.packageName ? getSafePackageName(snap.packageName) : "";
   return path.join(packageName, snap.data.className) + ".ts";
 }
