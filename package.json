@@ -1,11 +1,9 @@
 {
   "name": "mockshot",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Generate mocks from your snapshot tests",
   "main": "dist",
-  "bin": {
-    "mockshot": "./dist/run.js"
-  },
+  "bin": "./dist/cli/index.js",
   "repository": "https://github.com/Iqoqo/mockshot.git",
   "author": "Shlomo Kraus <shlomo.kraus@iqoqo.co>",
   "license": "MIT",
