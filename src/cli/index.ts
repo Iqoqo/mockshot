@@ -2,7 +2,7 @@
 import { run } from "../run";
 
 export async function cliRun(args: string[]) {
-  const outputDir = args[0];
+  const outputDir = args[0] || "./@mocks";
   await run(outputDir);
 }
 
