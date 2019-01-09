@@ -3,6 +3,7 @@
   "version": "0.2.8",
   "description": "Generate mocks from your snapshot tests",
   "main": "dist",
+  "typings": "./dist/types/index.d.ts",
   "bin": "./dist/cli/index.js",
   "repository": "https://github.com/Iqoqo/mockshot.git",
   "author": "Shlomo Kraus <shlomo.kraus@iqoqo.co>",

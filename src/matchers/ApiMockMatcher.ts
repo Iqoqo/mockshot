@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { ServerResponse } from "http";
 import url from "url";
 import { MockshotTag, Success } from "../constants";
 import { IApiSnapData, IApiSnapDataBase, MatcherReturn } from "../contracts";
@@ -11,7 +12,7 @@ import { IApiSnapData, IApiSnapDataBase, MatcherReturn } from "../contracts";
 export const ApiSnapshotTag = "[APISnap]";
 
 export function toMatchApiMock(
-  response,
+  response: ServerResponse,
   mockName: string = Success
 ): MatcherReturn {
   let parsedResponse: IApiSnapDataBase;
