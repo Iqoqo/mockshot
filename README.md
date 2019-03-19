@@ -1,3 +1,4 @@
+
 <div align="center">
 <img alt="Mockshot" src="./public/img/mockshot.png" width=500/>
 
@@ -7,6 +8,7 @@
 
 </div>
 
+
 ## TL;DR
 
 Imagine you could:
@@ -15,6 +17,8 @@ Imagine you could:
 2.  Have a guarantee that your mocks are always valid
 
 Mockshot give you these superpowers, and more.
+
+### Checkout the new blog post! [Introduction to writing tests with Mockshot](https://medium.com/iqoqo-engineering/this-library-uses-your-jest-tests-to-generate-mocks-c07c322c58e3) on Medium
 
 ## Overview
 
