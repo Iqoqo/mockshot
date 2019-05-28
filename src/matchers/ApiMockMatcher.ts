@@ -9,11 +9,14 @@ import url from "url";
 import { MockshotTag, Success } from "../constants";
 import { IApiSnapData, IApiSnapDataBase, MatcherReturn } from "../contracts";
 
+import { cloneDeep, intersection, set } from "lodash";
+
 export const ApiSnapshotTag = "[APISnap]";
 
 export function toMatchApiMock(
   response: ServerResponse,
-  mockName: string = Success
+  mockName: string = Success,
+  ignore?: string[]
 ): MatcherReturn {
   let parsedResponse: IApiSnapDataBase;
   try {
@@ -25,7 +28,25 @@ export function toMatchApiMock(
   const snapshot: IApiSnapData = { mockName, ...parsedResponse };
   const snapshotTag = `${MockshotTag} ${ApiSnapshotTag} [${
     parsedResponse.httpMethod
-  } ${parsedResponse.url} ${mockName}]`;
+    } ${parsedResponse.url} ${mockName}]`;
+
+  const snapshotName = `${this.currentTestName}: ${snapshotTag} 1`;
+  const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
+
+  if (ignore && currentSnapshot) {
+    const parsedSnapshot = JSON.parse(currentSnapshot);
+    const mockClone = cloneDeep(snapshot.mock.body);
+    const ignoredKeys = intersection(ignore, Object.keys(mockClone))
+    if (ignoredKeys.length === 0) {
+      throw Error("API response did not include ignored key(s): " + ignore.join(","));
+    };
+    Object.keys(mockClone).forEach(key => {
+      if (ignore.indexOf(key) > -1) {
+        set(mockClone, key, parsedSnapshot.mock.body[key]);
+      }
+    });
+    snapshot.mock.body = mockClone;
+  }
 
   return {
     pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag),
@@ -41,14 +62,15 @@ function parse(response): IApiSnapDataBase {
     response.status &&
     response.data
   ) {
-    // response is done with axios library (https://www.npmjs.com/package/axios)
+
+    // response is produced with axios (https://www.npmjs.com/package/axios)
     return {
       httpMethod: response.config.method.toLowerCase(),
       url: getPathname(response.config.url),
       mock: { statusCode: response.status, body: response.data }
     };
   } else if (response.status && response.req && response.req.method) {
-    // response is done with chai library (https://www.google.it.on.your/own)
+    // response is produced with chai (https://www.npmjs.com/package/chai)
     return {
       httpMethod: response.req.method.toLowerCase(),
       url: getPathname(response.request.url),
@@ -56,9 +78,9 @@ function parse(response): IApiSnapDataBase {
     };
   } else {
     throw Error(
-      `The response type is not supported.
-       we're supporting only the usage of: chai & axios.
-       You can submit an issue on https://github.com/iqoqo/mockshot/issues to add support for another library`
+      `This response type is not supported.
+       Only chai (https://github.com/chaijs/chai) and axios (https://github.com/axios/axios) are currently supported.
+       Please submit an issue at https://github.com/iqoqo/mockshot/issues`
     );
   }
 }

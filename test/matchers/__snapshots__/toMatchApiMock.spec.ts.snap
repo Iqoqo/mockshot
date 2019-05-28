@@ -1,5 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`toMatchApiMock() Should ignore value for given key : [mockshot] [APISnap] [get /users/123 axios-success] 1`] = `
+{
+  "httpMethod": "get",
+  "mock": {
+    "body": {
+      "foo": "bar",
+      "hello": "world"
+    },
+    "statusCode": 200
+  },
+  "mockName": "axios-success",
+  "url": "/users/123"
+}
+`;
+
+exports[`toMatchApiMock() Should raise error if non existing value ignored: [mockshot] [APISnap] [get /users/123 axios-success] 1`] = `
+{
+  "httpMethod": "get",
+  "mock": {
+    "body": {
+      "foo": "bar",
+      "hello": "world"
+    },
+    "statusCode": 200
+  },
+  "mockName": "axios-success",
+  "url": "/users/123"
+}
+`;
+
 exports[`toMatchApiMock() Should use success mockName if none provided ~3~: [mockshot] [APISnap] [post /login success] 1`] = `
 {
   "httpMethod": "post",

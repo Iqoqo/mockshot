@@ -3,6 +3,7 @@ import adapter from "axios/lib/adapters/http";
 import chai from "chai";
 import chaiHttp from "chai-http";
 import http from "http";
+import { cloneDeep, set } from "lodash";
 import "../../src";
 import { getOwnSnapshots } from "../utils";
 
@@ -76,5 +77,25 @@ describe("toMatchApiMock()", () => {
     const { data } = getSnapshot("~3~");
 
     expect(data.mockName).toBe("success");
+  });
+
+  it("Should raise error if non existing value ignored", async () => {
+    const path = "/users/123";
+    const res = await axios.get(testUrl + path + urlQuery, { adapter });
+    const ignoreKey = "hellodddd";
+    try {
+      expect(res).toMatchApiMock("axios-success", [ignoreKey]);
+    } catch (ex) {
+      expect(ex.message).toEqual(`API response did not include ignored key(s): ${ignoreKey}`)
+    }
+  });
+
+  it("Should ignore value for given key ", async () => {
+    const path = "/users/123";
+    const res = await axios.get(testUrl + path + urlQuery, { adapter });
+    const resClone = cloneDeep(res);
+    resClone.data["hello"] = "wrong";
+
+    expect(resClone).toMatchApiMock("axios-success", ["hello"]);
   });
 });
