@@ -22,8 +22,6 @@ describe("getOwnSnapshots", () => {
     expect(ownSnapshots[0].key).toBe(
       "getOwnSnapshots should generate a snapshot: [mockshot] [ClassSnap] [[fakeClass fakeMethod fakeMock]] 1"
     );
-    expect(ownSnapshots[0].filePath).toBe(
-      "/Users/idan/Documents/projects/mockshot/test/utils/__snapshots__/utils.spec.ts.snap"
-    );
+    expect(ownSnapshots[0].filePath).not.toBeNull();
   });
 });
