@@ -77,14 +77,14 @@ function parse(response): IApiSnapDataBase {
     response.data
   ) {
 
-    // response is produced with axios library (https://github.com/axios/axios)
+    // response is produced with axios (https://www.npmjs.com/package/axios)
     return {
       httpMethod: response.config.method.toLowerCase(),
       url: getPathname(response.config.url),
       mock: { statusCode: response.status, body: response.data }
     };
   } else if (response.status && response.req && response.req.method) {
-    // response is produced with chai library (https://github.com/chaijs/chai)
+    // response is produced with chai (https://www.npmjs.com/package/chai)
     return {
       httpMethod: response.req.method.toLowerCase(),
       url: getPathname(response.request.url),
