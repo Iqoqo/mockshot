@@ -25,47 +25,33 @@ export function toMatchApiMock(
     return { pass: false, message: () => err.message };
   }
 
-  let snapshot: IApiSnapData = { mockName, ...parsedResponse };
+  const snapshot: IApiSnapData = { mockName, ...parsedResponse };
   const snapshotTag = `${MockshotTag} ${ApiSnapshotTag} [${
     parsedResponse.httpMethod
     } ${parsedResponse.url} ${mockName}]`;
 
-  if (ignore) {
-    snapshot = overrideIgnoredValues(this, snapshotTag, snapshot.mock.body, ignore);
+  const snapshotName = `${this.currentTestName}: ${snapshotTag} 1`;
+  const currentSnapshot = this.snapshotState._snapshotData[snapshotName];
+
+  if (ignore && currentSnapshot) {
+    const parsedSnapshot = JSON.parse(currentSnapshot);
+    const mockClone = cloneDeep(snapshot.mock.body);
+    const ignoredKeys = intersection(ignore, Object.keys(mockClone))
+    if (ignoredKeys.length === 0) {
+      throw Error("API response did not include ignored key(s): " + ignore.join(","));
+    };
+    Object.keys(mockClone).forEach(key => {
+      if (ignore.indexOf(key) > -1) {
+        set(mockClone, key, parsedSnapshot.mock.body[key]);
+      }
+    });
+    snapshot.mock.body = mockClone;
   }
 
   return {
     pass: undefined === expect(snapshot).toMatchSnapshot(snapshotTag),
     message: () => `expected ${snapshot} to match tag ${snapshotTag}`
   };
-}
-
-function overrideIgnoredValues(self, snapshotTag: string, targetTest: {}, ignoreKeys: string[]): any {
-  const snapshotName = `${self.currentTestName}: ${snapshotTag} 1`;
-  const currentSnapshot = self.snapshotState._snapshotData[snapshotName];
-  const parsedSnapshot = JSON.parse(currentSnapshot);
-  let cleanSnapshot = Object.keys(parsedSnapshot)
-    .filter(key => key === "mock")
-    .map(k => parsedSnapshot[k])
-    .reduce(v => v);
-  cleanSnapshot = Object.keys(cleanSnapshot)
-    .filter(key => key === "body")
-    .map(k => cleanSnapshot[k])
-    .reduce(v => v);
-
-  const mockClone = cloneDeep(targetTest);
-  const ignoredKeys = intersection(ignoreKeys, Object.keys(mockClone))
-  if (ignoredKeys.length === 0) {
-    throw Error("API response did not include ignored key(s): " + ignoreKeys.join(","));
-  };
-  Object.keys(mockClone).forEach(key => {
-    if (ignoreKeys.indexOf(key) > -1) {
-      set(mockClone, key, cleanSnapshot[key]);
-    }
-  });
-
-  parsedSnapshot.mock.body = mockClone;
-  return parsedSnapshot;
 }
 
 function parse(response): IApiSnapDataBase {

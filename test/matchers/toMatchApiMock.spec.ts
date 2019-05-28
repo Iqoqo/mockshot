@@ -79,14 +79,14 @@ describe("toMatchApiMock()", () => {
     expect(data.mockName).toBe("success");
   });
 
-  it("Should raise error if non existing value ignored ", async () => {
+  it("Should raise error if non existing value ignored", async () => {
     const path = "/users/123";
     const res = await axios.get(testUrl + path + urlQuery, { adapter });
-
+    const ignoreKey = "hellodddd";
     try {
-      expect(res).toMatchApiMock("axios-success", ["hellodddd"]);
+      expect(res).toMatchApiMock("axios-success", [ignoreKey]);
     } catch (ex) {
-      expect(ex.message).toEqual("API response did not include ignored key(s): hellodddd")
+      expect(ex.message).toEqual(`API response did not include ignored key(s): ${ignoreKey}`)
     }
   });
 
