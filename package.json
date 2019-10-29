@@ -44,9 +44,9 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/jest": "^23.3.1",
-    "@types/lodash": "^4.14.116",
+    "@types/lodash": "4.14.144",
     "@types/node": "10.3.1",
-    "axios": "^0.18.1",
+    "axios": "^0.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "prettier": "1.11.1",
